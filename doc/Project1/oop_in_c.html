@@ -1,0 +1,318 @@
+
+<!-- saved from url=(0059)http://cs.binghamton.edu/~kchiu/cs540/prog/1/oop_in_c.shtml -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <title>CS 440/540: OOP in C</title>
+    <style type="text/css">
+      var {
+        font-family: times;
+        font-style: italic;
+      }
+      .points {
+        font-family: times;
+        font-style: italic;
+        font-weight: normal;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>CS 440/540: OOP in C</h1>
+    <h3>Due September 9, 11:59 PM.</h3>
+    <p>
+      
+      <i>(This document was last modified on Tuesday, August 30, 2011 at 04:33:46 PM.)</i>
+
+    </p><hr>
+
+    <p>
+      This assignment is intended as a “warm-up” assigment
+      to review C and C++,
+      and to get you familiar with using UNIX, etc.,
+      It is also designed to give you an idea of whether or not you
+      wish to take this course.
+      The topic of the assignment is how to do OOP in C.
+      This will give you some understanding of what
+      goes in behind-the-scenes,
+      and also serve as a good review of C.
+      A solid background in C will be necessary for the rest
+      of the course.
+
+    </p><p>
+      The assignment is not to be completed in strict C,
+      but rather more like C++ without classes.
+      You may not use any C++ classes, inheritance, templates,
+      or member functions.
+      Also do not use any of the standard C++ containers
+      such as <code>std::vector</code> or <code>std::list</code>.
+      You may (in fact, you should) use C++ references.
+      You must compile with <code>g++</code>, not <code>gcc</code>.
+      I strongly suggest that you compile with <code>-Wall</code> to
+      enable all warnings.
+      Individual warnings that are not useful,
+      such as warnings about unused variables,
+      may be turned off individually (<code>-Wno-unused</code>).
+
+    </p><p>
+      You do not need to handle any error conditions not
+      explicitly specified.
+      For example, you may assume that the iterator
+      returned by <code>end()</code>
+      is never incremented.
+
+    </p><h4>Part 1: Classes in C</h4>
+
+    <p>
+      For this part, you will investigate how to do class
+      hierarchies in C.
+      You must implement a base class named Person,
+      a class named Student derived from Person,
+      a class named Under derived from Student,
+      a class named Grad derived from Student,
+      and a class named Professor derived directly
+      from Person.
+      Note that no functions are available
+      to the user to instantiate Person or Student,
+      and thus the user cannot validly instantiate
+      them.
+      This is analagous to an abstract base class.
+      Internally, you may define any functions you
+      wish, but those would be private to your
+      implementation.
+      Of course,
+      since C does not have classes,
+      you will need to use a <code>struct</code> to represent the class.
+      Requirements are given via usage in the <code>test.cpp</code>
+      file which is linked below.
+
+    </p><p>
+      Note that to make this truly a class hierarchy,
+      it must be possible for an external user to add
+      a derived class without changing any code
+      in the base class.
+      To give yourself some assurance that you
+      can indeed do this,
+      after you are done,
+      go through what you would need to do to add
+      a Staff class, or a NonDegreeStudent class.
+      If you would need to actually change any of
+      the files you have already written,
+      then you have not implemented those properly,
+      and you will lose points.
+
+    </p><p>
+      For example,
+      it would be incorrect to implement the <code>work()</code>
+      method by checking the type of the Person inside of it,
+      and printing the desired text.
+      In such a case,
+      adding another Person type would require that you modify
+      the existing <code>work()</code> code,
+      which would not meet the requirements.
+
+    </p><h4>Part 2: A Container in C</h4>
+
+    <p>
+      For this part,
+      you will use a macro to implement a template
+      for a binary search tree container in C.
+      As a template,
+      it will be able to contain any type
+      without using void * (which violates type safety).
+      The requirements are again given via the <code>test.cpp</code> program,
+      linked below.
+      You are to write the macro so that this program
+      will compile and run properly.
+      You do <i>not</i> need to balance the tree.
+
+    </p><p>
+      You should use three struct types:
+      one to represent the container itself,
+      another for each element in the container (the node),
+      and a third for the iterator.
+      The struct type for the container itself would contain
+      things like a pointer to the root node.
+      The node struct type might have pointers to the children.
+      The iterator struct type could contain just a pointer
+      to the node that it is positioned at.
+
+    </p><p>
+      Since the container must have slightly different
+      source code for each type,
+      you cannot code it directly.
+      Instead,
+      you need to write a long macro,
+      named
+      <code>BinarySearchTree_DEFINE()</code>.
+      The macro takes one argument,
+      which is the contained type,
+      provided as a typedef if it is not already
+      single word.
+      This macro will contain all the definitions
+      needed for the container.
+      By making the name of the contained
+      type part of the generated classes and functions,
+      a separate instance of the source code is generated
+      for each contained type.
+
+    </p><p>
+      For example,
+      the struct for a container containing
+      <code>MyClass</code> objects would be named <code>BinarySearchTree_MyClass</code>,
+      while the struct for a container of
+      <code>int</code> variables would be named <code>BinarySearchTree_int</code>.
+      A container for pointers to MyClass objects would be created by
+      first defining a typedef:
+
+    </p><blockquote>
+      <pre>typedef MyClass *MyClassPtr;</pre>
+    </blockquote>
+
+      and then instantiating the container code by
+      <code>BinarySearchTree_DEFINE(MyClassPtr)</code>.
+
+    <p>
+      I strongly suggest that you first do this part as regular code.
+      When you are sure it is working,
+      then convert it to a macro as the last step.
+      Also, after converting it to a macro,
+      save the original.
+      If you find a bug,
+      fix it in the original,
+      then convert to a macro again.
+
+    </p><h3>Submission and Evaluation</h3>
+
+    <p>
+      Your code must not have any fixed limits.
+      For example, you must be able to accept Person
+      names of any length.
+      You must be able to construct the binary search tree
+      with any number elements, etc.
+      Your program must not have any memory leaks,
+      nor any other types of memory errors, such
+      as using data before it is initialized,
+      writing to beyond a valid memory region,
+      etc.
+      Use the <code>valgrind</code> command to test
+      your submission.
+
+    </p><p>
+      The test program for the assignment is
+      <a href="http://cs.binghamton.edu/~kchiu/cs540/prog/1/test.cpp">here</a>.
+      The output that you should get is
+      <a href="http://cs.binghamton.edu/~kchiu/cs540/prog/1/output">here</a>.
+      Your code must work with the unaltered
+      <code>test.cpp</code>.
+      (You are of course allowed to modify
+      it on your own, as long as your submission still
+      works with the unaltered version.)
+      You should stress test your code,
+      see the comment at the beginning of <code>test.cpp</code>
+      for the options.
+      We may also test your code with other test files,
+      but we will conform to the API used in the
+      provided <code>test.cpp</code> file.
+
+    </p><p>
+      The test program is provided as a means
+      for you to check whether or not your program
+      is as expected.
+      It is NOT intended to be used to develop and debug your program.
+      You may find it hard to understand, etc.
+      Also, we may update the test program
+      periodically.
+
+    </p><p>
+      You may of course develop your program on any
+      machine,
+      but it will be tested on the Linux classroom machines,
+      and your grade will be determined by how it works
+      on those.
+
+    </p><p>
+      You must divide your code up into three files:
+      <code>Person.hpp</code>,
+      <code>Person.cpp</code>,
+      and <code>BinarySearchTree.hpp</code>.
+      Your header files must have
+      <a href="http://en.wikipedia.org/wiki/Include_guard">include guards</a>.
+      Your submission must also include a <code>README</code>
+      file which minimally contains
+      at least your name and ID number.
+      It can optionally contain any
+      comments you feel are relevant to the project like what works,
+      what does not work,
+      what you feel is neat,
+      logs of test cases, etc.
+
+    </p><p>
+      Your grade will be based on correctness.
+      Correctness will include whether or not your output is correct,
+      and whether or not you can scale, or have any memory
+      (or other resource) leaks.
+      Correctness will also depend on whether or not you
+      have followed instructions, such as not using inheritance
+      or member functions.
+      If your code does not work correctly with
+      the provided <code>test.cpp</code>,
+      you must provide your own test code,
+      which we will use to assign partial credit.
+      Failure to do so will result in a low grade.
+
+    </p><p>
+      Performance will only be a factor for this assignment
+      if you are unusually slow.
+      <!--
+      For comparison purposes,
+      you can use the performance test program
+      <a href="test_speed.cpp">here</a>.
+      I would expect your solution to finish the
+      test in about 5 seconds or less.
+      I compiled with <code>-O</code>,
+      and the resulting executable is
+      <a href="test_speed">here</a>.
+      (Remember to use "chmod a+x test_speed" to make
+      the file executable after you download it.)
+      -->
+
+    </p><p>
+      You must e-mail a compressed (gzip) tar file <code>YOUR_B_NUMBER_INCLUDING_THE_INITIAL_CAPITAL_B.tar.gz</code> containing
+      the three files and the README to
+      the class	<a href="mailto:cs540-internal@cs.binghamton.edu">internal mailing list</a>
+      with subject set to “CS540 PROJ1 SUBMISSION”.
+      The archive must not contain any executable or <code>.o</code> files.
+      These will likely cause your submission to be rejected automatically by
+      the e-mail server.
+
+    </p><p>
+      You will find that a makefile will make your life easier.
+      A very simple makefile is given below:
+
+    </p><blockquote><pre>PROJECT = YOUR_B_NUMBER
+SRC_FILES = \
+	main.cpp \
+	...
+	Makefile \
+	README
+a.out:
+	g++ -g -Wall file1.cpp file2.cpp...
+
+#Removes all objects and executables.
+clean:
+	rm -f  *.out *.o  core *.core *~
+
+#This target makes a archive containing all the project source files,
+#suitable for submission.
+submit:	$(SRC_FILES)
+	tar cvfz $(PROJECT).tar.gz $(SRC_FILES)
+</pre>
+    </blockquote>
+
+    <p>
+      Note the compile line must be indented with a real tab,
+      and not just spaces.
+
+  
+
+
+<!-- vim: set sts=2 sw=2 expandtab ai: -->
+</p></body></html>
