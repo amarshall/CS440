@@ -21,7 +21,7 @@ Grad* Grad_new(char* name, char gender, char* major, char* degree) {
   grad->student.person.name = strdup(name);
   grad->student.person.gender = gender;
   grad->student.major = strdup(major);
-  grad->degree = degree;
+  grad->degree = strdup(degree);
   grad->student.person.work = &work_student;
   grad->student.person.type_check = &type_check_grad;
   grad->student.graduate = &graduate_grad;
