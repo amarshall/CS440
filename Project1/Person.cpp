@@ -33,6 +33,7 @@ Under* Under_new(char* name, char gender, char* major, int year) {
   Under* under = (Under*) malloc(sizeof(Under));
   under->student.person.name = strdup(name);
   under->student.person.gender = gender;
+  under->student.person.delet = &Under_delete;
   under->student.major = strdup(major);
   under->year = year;
   under->student.person.work = &work_student;
@@ -88,6 +89,28 @@ Grad* Student_downcast_Grad(Student* student) {
   } else {
     return NULL;
   }
+}
+
+void Professor_delete(Person* person) {
+  Professor* professor = Person_downcast_Professor(person);
+  free(professor->person.name);
+  free(professor->office);
+  free(professor);
+}
+
+void Under_delete(Person* person) {
+  Under* under = Person_downcast_Under(person);
+  free(under->student.person.name);
+  free(under->student.major);
+  free(under);
+}
+
+void Grad_delete(Person* person) {
+  Grad* grad = Person_downcast_Grad(person);
+  free(grad->student.person.name);
+  free(grad->student.major);
+  free(grad->degree);
+  free(grad);
 }
 
 void work_student(Person* person) {

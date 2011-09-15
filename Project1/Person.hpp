@@ -6,6 +6,7 @@ typedef struct Person_ {
   char gender;
   void (*work)(Person_*);
   int (*type_check)(const char*);
+  void (*delet)(Person_*);
 } Person;
 
 typedef struct Professor_ {
@@ -45,6 +46,10 @@ void Person_print(Person* person);
 void Professor_print(Professor* professor);
 void Student_print(Student* student);
 void Under_print(Under* under);
+
+void Professor_delete(Person* person);
+void Under_delete(Person* person);
+void Grad_delete(Person* person);
 
 void work_student(Person* person);
 void work_professor(Person* person);
