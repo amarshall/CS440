@@ -4,10 +4,11 @@
 #include <string.h>
 #include <iostream>
 
-Professor* Professor_new(char* name, char gender, char* office) {
+Professor* Professor_new(const char* name, char gender, const char* office) {
   Professor* professor = (Professor*) malloc(sizeof(Professor));
   professor->person.name = strdup(name);
   professor->person.gender = gender;
+  professor->person.delet = &Professor_delete;
   professor->office = strdup(office);
   professor->person.work = &work_professor;
   professor->person.type_check = &type_check_professor;
@@ -16,10 +17,11 @@ Professor* Professor_new(char* name, char gender, char* office) {
   return professor;
 }
 
-Grad* Grad_new(char* name, char gender, char* major, char* degree) {
+Grad* Grad_new(const char* name, char gender, const char* major, const char* degree) {
   Grad* grad = (Grad*) malloc(sizeof(Grad));
   grad->student.person.name = strdup(name);
   grad->student.person.gender = gender;
+  grad->student.person.delet = &Grad_delete;
   grad->student.major = strdup(major);
   grad->degree = strdup(degree);
   grad->student.person.work = &work_student;
@@ -29,7 +31,7 @@ Grad* Grad_new(char* name, char gender, char* major, char* degree) {
   return grad;
 }
 
-Under* Under_new(char* name, char gender, char* major, int year) {
+Under* Under_new(const char* name, char gender, const char* major, int year) {
   Under* under = (Under*) malloc(sizeof(Under));
   under->student.person.name = strdup(name);
   under->student.person.gender = gender;
@@ -132,7 +134,7 @@ void graduate_under(Student* student) {
   printf("%s graduates in %d years and finds a job in %s or goes to grad school.\n", student->person.name, under->year, student->major);
 }
 
-void research(Professor* professor, char* topic) {
+void research(Professor* professor, const char* topic) {
   printf("%s does reasearch in %s.\n", professor->person.name, topic);
 }
 
