@@ -6,7 +6,7 @@ all: Person.o BinarySearchTree.o test.cpp
 Person.o: Person.cpp Person.hpp
 	$(CC) -c Person.cpp
 
-Binarysearchtree.o: BinarySearchTree.cpp BinarySearchTree.hpp
+BinarySearchTree.o: BinarySearchTree.cpp BinarySearchTree.hpp
 	$(CC) -c BinarySearchTree.cpp
 
 clean:
