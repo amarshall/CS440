@@ -29,7 +29,6 @@ typedef struct BinarySearchTree_MyClass_Iterator_ {
 
 typedef struct BinarySearchTree_MyClass_ {
   Node* root;
-  Node* first; //FIXME
   Link* sentinel;
   const char* type;
   BinarySearchTree_MyClass_Iterator (*insert)(BinarySearchTree_MyClass_*, MyClass);
