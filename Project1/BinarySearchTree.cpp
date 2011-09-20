@@ -1,6 +1,5 @@
 #include "BinarySearchTree.hpp"
 #include <stdlib.h>
-#include <stdio.h>
 
 BinarySearchTree_MyClass* BinarySearchTree_MyClass_new(bool(*comparator)(const MyClass &o1, const MyClass &o2)) {
   BinarySearchTree_MyClass* bst = (BinarySearchTree_MyClass*) malloc(sizeof(BinarySearchTree_MyClass));
@@ -147,31 +146,19 @@ MyClass Iterator_dereference(BinarySearchTree_MyClass_Iterator* iterator) {
 }
 
 void addLeftNode(BinarySearchTree_MyClass* bst, Node* parent, Node* newNode) {
-  // printf("Inserting left\n");
   parent->left = newNode;
   newNode->backReference = &parent->left;
   newNode->link.previous = parent->link.previous;
   newNode->link.next = &parent->link;
   parent->link.previous->next = &newNode->link;
   parent->link.previous = &newNode->link;
-  // printf("Current: %3.1f | ", newNode->element.num);
-  // printf("Previous: %3.1f %d | ", ((Node*)newNode->link.previous)->element.num, newNode->link.next->sentinel);
-  // printf("Next: %3.1f %d | ", ((Node*)newNode->link.next)->element.num, newNode->link.next->sentinel);
-  // printf("Prev->cur: %3.1f | ", ((Node*)newNode->link.previous->next)->element.num);
-  // printf("Next->cur: %3.1f\n", ((Node*)newNode->link.next->previous)->element.num);
 }
 
 void addRightNode(BinarySearchTree_MyClass* bst, Node* parent, Node* newNode) {
-  // printf("Inserting right\n");
   parent->right = newNode;
   newNode->backReference = &parent->right;
   newNode->link.previous = &parent->link;
   newNode->link.next = parent->link.next;
   parent->link.next->previous = &newNode->link;
   parent->link.next = &newNode->link;
-  // printf("Current: %3.1f | ", newNode->element.num);
-  // printf("Previous: %3.1f %d | ", ((Node*)newNode->link.previous)->element.num, newNode->link.next->sentinel);
-  // printf("Next: %3.1f %d | ", ((Node*)newNode->link.next)->element.num, newNode->link.next->sentinel);
-  // printf("Prev->cur: %3.1f | ", ((Node*)newNode->link.previous->next)->element.num);
-  // printf("Next->cur: %3.1f\n", ((Node*)newNode->link.next->previous)->element.num);
 }
