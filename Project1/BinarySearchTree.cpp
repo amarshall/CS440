@@ -119,8 +119,13 @@ BinarySearchTree_MyClass_Iterator end(BinarySearchTree_MyClass* bst) {
 }
 
 bool BinarySearchTree_MyClass_Iterator_equal(BinarySearchTree_MyClass_Iterator it1, BinarySearchTree_MyClass_Iterator it2) {
-  if(it1.link->sentinel && it2.link->sentinel) return true;
-  return it1.comparator(it1.deref(&it1), it2.deref(&it1));
+  if(it1.link->sentinel && it2.link->sentinel) {
+    return true;
+  } else if (it1.link->sentinel || it2.link->sentinel) {
+    return false;
+  } else {
+    return !it1.comparator(it1.deref(&it1), it2.deref(&it2)) && !it2.comparator(it2.deref(&it2), it1.deref(&it1));
+  }
 }
 
 void Iterator_inc(BinarySearchTree_MyClass_Iterator* iterator) {
