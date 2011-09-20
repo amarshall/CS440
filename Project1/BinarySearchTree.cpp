@@ -43,6 +43,9 @@ BinarySearchTree_MyClass_Iterator insert(BinarySearchTree_MyClass* bst, MyClass 
   } else {
     Node* node = bst->root;
     while(true) {
+      if(BinarySearchTree_MyClass_Iterator_equal(Iterator_new(bst, &node->link), Iterator_new(bst, &newNode->link))) {
+        return Iterator_new(bst, (Link*)bst->sentinel);
+      }
       if(bst->comparator(element, node->element)) {
         if(node->left == NULL) {
           addLeftNode(bst, node, newNode);
