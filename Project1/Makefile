@@ -1,4 +1,4 @@
-CC=g++ -Wall
+CC=g++ -Wall -g
 
 all: Person.o BinarySearchTree.o test.cpp
 	$(CC) Person.o BinarySearchTree.o test.cpp

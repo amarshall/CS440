@@ -289,8 +289,7 @@ main(int argc, char *argv[]) {
 
         BinarySearchTree_MyClass_Iterator it;
         // Empty container, should print nothing.
-        for (it = bst->begin(bst);
-         !BinarySearchTree_MyClass_Iterator_equal(it, bst->end(bst)); it.inc(&it)) {
+        for (it = bst->begin(bst); !BinarySearchTree_MyClass_Iterator_equal(it, bst->end(bst)); it.inc(&it)) {
             MyClass m = it.deref(&it);
             printf("%3.1f ", m.num);
         }
