@@ -8,6 +8,7 @@ struct MyClass {
 typedef struct Link_ {
   Link_* previous;
   Link_* next;
+  bool sentinel;
 } Link;
 
 typedef struct Node_ {
@@ -28,8 +29,8 @@ typedef struct BinarySearchTree_MyClass_Iterator_ {
 
 typedef struct BinarySearchTree_MyClass_ {
   Node* root;
-  Node* first;
-  Node* sentinel;
+  Node* first; //FIXME
+  Link* sentinel;
   const char* type;
   BinarySearchTree_MyClass_Iterator (*insert)(BinarySearchTree_MyClass_*, MyClass);
   BinarySearchTree_MyClass_Iterator (*begin)(BinarySearchTree_MyClass_*);
@@ -43,7 +44,7 @@ BinarySearchTree_MyClass* BinarySearchTree_MyClass_new(bool(*comparator)(const M
 Node* Node_new(MyClass element);
 BinarySearchTree_MyClass_Iterator Iterator_new(BinarySearchTree_MyClass* bst, Link* link);
 
-BinarySearchTree_MyClass_Iterator insert(BinarySearchTree_MyClass* bst, MyClass* element);
+BinarySearchTree_MyClass_Iterator insert(BinarySearchTree_MyClass* bst, MyClass element);
 BinarySearchTree_MyClass_Iterator begin(BinarySearchTree_MyClass* bst);
 BinarySearchTree_MyClass_Iterator end(BinarySearchTree_MyClass* bst);
 
