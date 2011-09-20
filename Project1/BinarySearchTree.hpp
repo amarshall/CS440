@@ -44,6 +44,8 @@ BinarySearchTree_MyClass* BinarySearchTree_MyClass_new(bool(*comparator)(const M
 Node* Node_new(MyClass element);
 BinarySearchTree_MyClass_Iterator Iterator_new(BinarySearchTree_MyClass* bst, Link* link);
 
+void delet(BinarySearchTree_MyClass*);
+
 BinarySearchTree_MyClass_Iterator insert(BinarySearchTree_MyClass* bst, MyClass element);
 void erase(BinarySearchTree_MyClass* bst, BinarySearchTree_MyClass_Iterator iterator);
 BinarySearchTree_MyClass_Iterator begin(BinarySearchTree_MyClass* bst);

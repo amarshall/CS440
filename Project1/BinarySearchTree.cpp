@@ -13,6 +13,7 @@ BinarySearchTree_MyClass* BinarySearchTree_MyClass_new(bool(*comparator)(const M
   bst->type = "MyClass";
   bst->comparator = comparator;
   bst->insert = &insert;
+  bst->delet = &delet;
   bst->erase = &erase;
   bst->begin = &begin;
   bst->end = &end;
@@ -34,7 +35,6 @@ Node* Node_new(MyClass element) {
 BinarySearchTree_MyClass_Iterator insert(BinarySearchTree_MyClass* bst, MyClass element) {
   Node* newNode = Node_new(element);
   if(bst->root->link.sentinel) {
-    // printf("Inserting root\n");
     newNode->link.previous = bst->sentinel;
     newNode->link.next = bst->sentinel;
     bst->sentinel->previous = &newNode->link;
@@ -72,29 +72,39 @@ BinarySearchTree_MyClass_Iterator Iterator_new(BinarySearchTree_MyClass* bst, Li
   return iterator;
 }
 
+void delet(BinarySearchTree_MyClass* bst) {
+  for(BinarySearchTree_MyClass_Iterator iterator = bst->begin(bst);
+      !BinarySearchTree_MyClass_Iterator_equal(iterator, bst->end(bst));
+      iterator.inc(&iterator)) {
+    free((Node*)iterator.link);
+  }
+  free(bst);
+}
+
 void erase(BinarySearchTree_MyClass* bst, BinarySearchTree_MyClass_Iterator iterator) {
   Node* node = (Node*)iterator.link;
+  Node* replacement = NULL;
 
-  if(node == bst->root) {
-    Node* replacement = (Node*)node->link.next;
-    bst->root = replacement;
-    *(replacement->backReference) = replacement->right;
-    replacement->left = node->left;
-    replacement->link.previous = node->link.previous;
-    node->link.previous->next = &replacement->link;
-  } else if(node->left == NULL && node->right == NULL) {
+  if(node->left == NULL && node->right == NULL) {
     *(node->backReference) = NULL;
-  } else if(node->left != NULL && node->right != NULL) {
-    Node* replacement = NULL;
-    if(node->link.previous != NULL) replacement = (Node*)node->link.previous;
-    if(node->link.next != NULL) replacement = (Node*)node->link.next;
-    *(node->backReference) = replacement;
+  } else {
+    if(node->left != NULL) {
+      replacement = node->left;
+    } else if(node->right != NULL) {
+      replacement = node->right;
+    }
+    if(node->backReference != NULL) *(node->backReference) = replacement;
+  }
 
-  } else /* only one child */ {
-    Node* replacement = NULL;
-    if(node->left != NULL) replacement = node->left;
-    if(node->right != NULL) replacement = node->right;
-    *(node->backReference) = replacement;
+  node->link.previous->next = node->link.next;
+  node->link.next->previous = node->link.previous;
+
+  if(bst->root == node) {
+    if(replacement == NULL) {
+      bst->root = (Node*)bst->sentinel;
+    } else {
+      bst->root = replacement;
+    }
   }
 
   free(node);
