@@ -91,14 +91,14 @@ void erase(BinarySearchTree_MyClass* bst, BinarySearchTree_MyClass_Iterator iter
   Node* replacement = NULL;
 
   if(node->left == NULL && node->right == NULL) {
-    *(node->backReference) = NULL;
+    node->backReference = NULL;
   } else {
     if(node->left != NULL) {
       replacement = node->left;
     } else if(node->right != NULL) {
       replacement = node->right;
     }
-    if(node->backReference != NULL) *(node->backReference) = replacement;
+    if(node->backReference != NULL) node->backReference = &replacement;
   }
 
   node->link.previous->next = node->link.next;
