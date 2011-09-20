@@ -29,7 +29,7 @@ typedef struct BinarySearchTree_MyClass_Iterator_ {
 
 typedef struct BinarySearchTree_MyClass_ {
   Node* root;
-  Link* sentinel;
+  Node* sentinel;
   const char* type;
   BinarySearchTree_MyClass_Iterator (*insert)(BinarySearchTree_MyClass_*, MyClass);
   void (*erase)(BinarySearchTree_MyClass_*, BinarySearchTree_MyClass_Iterator);

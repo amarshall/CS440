@@ -8,7 +8,7 @@ BinarySearchTree_MyClass* BinarySearchTree_MyClass_new(bool(*comparator)(const M
   sentinel->link.sentinel = true;
   sentinel->link.next = &sentinel->link;
   sentinel->link.previous = &sentinel->link;
-  bst->sentinel = &sentinel->link;
+  bst->sentinel = sentinel;
   bst->root = sentinel;
   bst->type = "MyClass";
   bst->comparator = comparator;
@@ -35,10 +35,10 @@ Node* Node_new(MyClass element) {
 BinarySearchTree_MyClass_Iterator insert(BinarySearchTree_MyClass* bst, MyClass element) {
   Node* newNode = Node_new(element);
   if(bst->root->link.sentinel) {
-    newNode->link.previous = bst->sentinel;
-    newNode->link.next = bst->sentinel;
-    bst->sentinel->previous = &newNode->link;
-    bst->sentinel->next = &newNode->link;
+    newNode->link.previous = (Link*)bst->sentinel;
+    newNode->link.next = (Link*)bst->sentinel;
+    ((Link*)bst->sentinel)->previous = &newNode->link;
+    ((Link*)bst->sentinel)->next = &newNode->link;
     bst->root = newNode;
   } else {
     Node* node = bst->root;
@@ -111,11 +111,11 @@ void erase(BinarySearchTree_MyClass* bst, BinarySearchTree_MyClass_Iterator iter
 }
 
 BinarySearchTree_MyClass_Iterator begin(BinarySearchTree_MyClass* bst) {
-  return Iterator_new(bst, bst->sentinel->next);
+  return Iterator_new(bst, ((Link*)bst->sentinel)->next);
 }
 
 BinarySearchTree_MyClass_Iterator end(BinarySearchTree_MyClass* bst) {
-  return Iterator_new(bst, bst->sentinel);
+  return Iterator_new(bst, (Link*)bst->sentinel);
 }
 
 bool BinarySearchTree_MyClass_Iterator_equal(BinarySearchTree_MyClass_Iterator it1, BinarySearchTree_MyClass_Iterator it2) {
