@@ -33,10 +33,10 @@ typedef struct BinarySearchTree_MyClass_ {
   Link* sentinel;
   const char* type;
   BinarySearchTree_MyClass_Iterator (*insert)(BinarySearchTree_MyClass_*, MyClass);
+  void (*erase)(BinarySearchTree_MyClass_*, BinarySearchTree_MyClass_Iterator);
   BinarySearchTree_MyClass_Iterator (*begin)(BinarySearchTree_MyClass_*);
   BinarySearchTree_MyClass_Iterator (*end)(BinarySearchTree_MyClass_*);
   bool (*comparator)(const MyClass &o1, const MyClass &o2);
-  void (*erase)(BinarySearchTree_MyClass_* bst, BinarySearchTree_MyClass_Iterator iterator);
   void (*delet)(BinarySearchTree_MyClass_* bst);
 } BinarySearchTree_MyClass;
 
@@ -45,6 +45,7 @@ Node* Node_new(MyClass element);
 BinarySearchTree_MyClass_Iterator Iterator_new(BinarySearchTree_MyClass* bst, Link* link);
 
 BinarySearchTree_MyClass_Iterator insert(BinarySearchTree_MyClass* bst, MyClass element);
+void erase(BinarySearchTree_MyClass* bst, BinarySearchTree_MyClass_Iterator iterator);
 BinarySearchTree_MyClass_Iterator begin(BinarySearchTree_MyClass* bst);
 BinarySearchTree_MyClass_Iterator end(BinarySearchTree_MyClass* bst);
 

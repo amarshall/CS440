@@ -13,6 +13,7 @@ BinarySearchTree_MyClass* BinarySearchTree_MyClass_new(bool(*comparator)(const M
   bst->type = "MyClass";
   bst->comparator = comparator;
   bst->insert = &insert;
+  bst->erase = &erase;
   bst->begin = &begin;
   bst->end = &end;
   return bst;
@@ -69,6 +70,34 @@ BinarySearchTree_MyClass_Iterator Iterator_new(BinarySearchTree_MyClass* bst, Li
   iterator.deref = &Iterator_dereference;
   iterator.comparator = bst->comparator;
   return iterator;
+}
+
+void erase(BinarySearchTree_MyClass* bst, BinarySearchTree_MyClass_Iterator iterator) {
+  Node* node = (Node*)iterator.link;
+
+  if(node == bst->root) {
+    Node* replacement = (Node*)node->link.next;
+    bst->root = replacement;
+    *(replacement->backReference) = replacement->right;
+    replacement->left = node->left;
+    replacement->link.previous = node->link.previous;
+    node->link.previous->next = &replacement->link;
+  } else if(node->left == NULL && node->right == NULL) {
+    *(node->backReference) = NULL;
+  } else if(node->left != NULL && node->right != NULL) {
+    Node* replacement = NULL;
+    if(node->link.previous != NULL) replacement = (Node*)node->link.previous;
+    if(node->link.next != NULL) replacement = (Node*)node->link.next;
+    *(node->backReference) = replacement;
+
+  } else /* only one child */ {
+    Node* replacement = NULL;
+    if(node->left != NULL) replacement = node->left;
+    if(node->right != NULL) replacement = node->right;
+    *(node->backReference) = replacement;
+  }
+
+  free(node);
 }
 
 BinarySearchTree_MyClass_Iterator begin(BinarySearchTree_MyClass* bst) {
