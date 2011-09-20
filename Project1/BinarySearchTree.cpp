@@ -44,6 +44,7 @@ BinarySearchTree_MyClass_Iterator insert(BinarySearchTree_MyClass* bst, MyClass 
     Node* node = bst->root;
     while(true) {
       if(BinarySearchTree_MyClass_Iterator_equal(Iterator_new(bst, &node->link), Iterator_new(bst, &newNode->link))) {
+        free(newNode);
         return Iterator_new(bst, (Link*)bst->sentinel);
       }
       if(bst->comparator(element, node->element)) {
@@ -81,6 +82,7 @@ void delet(BinarySearchTree_MyClass* bst) {
       iterator.inc(&iterator)) {
     free((Node*)iterator.link);
   }
+  free(bst->sentinel);
   free(bst);
 }
 
