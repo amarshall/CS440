@@ -126,16 +126,21 @@ void work_professor(Person* person) {
 
 void graduate_grad(Student* student) {
   Grad* grad = Student_downcast_Grad(student);
-  printf("%s graduates with a %s and finds a job in %s.\n", student->person.name, grad->degree, student->major);
+  printf("%s graduates with a %s degree and finds a job in %s.\n", student->person.name, grad->degree, student->major);
 }
 
 void graduate_under(Student* student) {
   Under* under = Student_downcast_Under(student);
-  printf("%s graduates in %d years and finds a job in %s or goes to grad school.\n", student->person.name, under->year, student->major);
+  int gradTime = 5 - under->year;
+  if(gradTime == 1) {
+    printf("%s graduates in %d year and finds a job in %s or goes to grad school.\n", student->person.name, gradTime, student->major);
+  } else {
+    printf("%s graduates in %d years and finds a job in %s or goes to grad school.\n", student->person.name, gradTime, student->major);
+  }
 }
 
 void research(Professor* professor, const char* topic) {
-  printf("%s does reasearch in %s.\n", professor->person.name, topic);
+  printf("%s does research in %s.\n", professor->person.name, topic);
 }
 
 int type_check_professor(const char* type) {

@@ -64,7 +64,7 @@ BinarySearchTree_##obj* BinarySearchTree_##obj##_new(bool(*comparator)(const obj
   sentinel->link.previous = &sentinel->link; \
   bst->sentinel = sentinel; \
   bst->root = sentinel; \
-  bst->type = #obj; \
+  bst->type = "BinarySearchTree_" #obj; \
   bst->comparator = comparator; \
   bst->insert = &BST_##obj##_insert; \
   bst->delet = &BST_##obj##_delet; \
