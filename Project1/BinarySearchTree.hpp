@@ -94,6 +94,7 @@ BinarySearchTree_##obj##_Iterator BST_##obj##_insert(BinarySearchTree_##obj* bst
     ((Link*)bst->sentinel)->previous = &newNode->link; \
     ((Link*)bst->sentinel)->next = &newNode->link; \
     bst->root = newNode; \
+    newNode->backReference = &bst->root; \
   } else { \
     Node_##obj* node = bst->root; \
     while(true) { \
@@ -101,7 +102,7 @@ BinarySearchTree_##obj##_Iterator BST_##obj##_insert(BinarySearchTree_##obj* bst
         free(newNode); \
         return Iterator_##obj##_new(bst, (Link*)bst->sentinel); \
       } \
-      if(bst->comparator(element, node->element)) { \
+      if(bst->comparator(newNode->element, node->element)) { \
         if(node->left == NULL) { \
           BST_##obj##_addLeftNode_##obj(bst, node, newNode); \
           break; \
@@ -145,14 +146,15 @@ void BST_##obj##_erase(BinarySearchTree_##obj* bst, BinarySearchTree_##obj##_Ite
   Node_##obj* replacement = NULL; \
 \
   if(node->left == NULL && node->right == NULL) { \
-    node->backReference = NULL; \
+    *node->backReference = NULL; \
   } else { \
     if(node->left != NULL) { \
       replacement = node->left; \
     } else if(node->right != NULL) { \
       replacement = node->right; \
     } \
-    if(node->backReference != NULL) node->backReference = &replacement; \
+    *node->backReference = replacement; \
+    *replacement->backReference = NULL; \
   } \
 \
   node->link.previous->next = node->link.next; \
