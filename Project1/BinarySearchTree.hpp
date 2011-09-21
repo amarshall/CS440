@@ -37,7 +37,7 @@ typedef struct BinarySearchTree_##obj##_ { \
 } BinarySearchTree_##obj; \
 \
 BinarySearchTree_##obj* BinarySearchTree_##obj##_new(bool(*comparator)(const obj &o1, const obj &o2)); \
-Node_##obj* Node_##obj_new(obj element); \
+Node_##obj* Node_##obj##_new(obj element); \
 BinarySearchTree_##obj##_Iterator Iterator_##obj##_new(BinarySearchTree_##obj* bst, Link* link); \
 \
 void BST_##obj##_delet(BinarySearchTree_##obj*); \
@@ -74,7 +74,7 @@ BinarySearchTree_##obj* BinarySearchTree_##obj##_new(bool(*comparator)(const obj
   return bst; \
 } \
 \
-Node_##obj* Node_##obj_new(obj element) { \
+Node_##obj* Node_##obj##_new(obj element) { \
   Node_##obj* node = (Node_##obj*) malloc(sizeof(Node_##obj)); \
   node->element = element; \
   node->backReference = NULL; \
@@ -87,29 +87,29 @@ Node_##obj* Node_##obj_new(obj element) { \
 } \
 \
 BinarySearchTree_##obj##_Iterator BST_##obj##_insert(BinarySearchTree_##obj* bst, obj element) { \
-  Node_##obj* newNode_##obj = Node_##obj_new(element); \
+  Node_##obj* newNode = Node_##obj##_new(element); \
   if(bst->root->link.sentinel) { \
-    newNode_##obj->link.previous = (Link*)bst->sentinel; \
-    newNode_##obj->link.next = (Link*)bst->sentinel; \
-    ((Link*)bst->sentinel)->previous = &newNode_##obj->link; \
-    ((Link*)bst->sentinel)->next = &newNode_##obj->link; \
-    bst->root = newNode_##obj; \
+    newNode->link.previous = (Link*)bst->sentinel; \
+    newNode->link.next = (Link*)bst->sentinel; \
+    ((Link*)bst->sentinel)->previous = &newNode->link; \
+    ((Link*)bst->sentinel)->next = &newNode->link; \
+    bst->root = newNode; \
   } else { \
     Node_##obj* node = bst->root; \
     while(true) { \
-      if(BinarySearchTree_##obj##_Iterator_equal(Iterator_##obj##_new(bst, &node->link), Iterator_##obj##_new(bst, &newNode_##obj->link))) { \
-        free(newNode_##obj); \
+      if(BinarySearchTree_##obj##_Iterator_equal(Iterator_##obj##_new(bst, &node->link), Iterator_##obj##_new(bst, &newNode->link))) { \
+        free(newNode); \
         return Iterator_##obj##_new(bst, (Link*)bst->sentinel); \
       } \
       if(bst->comparator(element, node->element)) { \
         if(node->left == NULL) { \
-          BST_##obj##_addLeftNode_##obj(bst, node, newNode_##obj); \
+          BST_##obj##_addLeftNode_##obj(bst, node, newNode); \
           break; \
         } \
         node = node->left; \
       } else { \
         if(node->right == NULL) { \
-          BST_##obj##_addRightNode_##obj(bst, node, newNode_##obj); \
+          BST_##obj##_addRightNode_##obj(bst, node, newNode); \
           break; \
         } \
         node = node->right; \
@@ -117,7 +117,7 @@ BinarySearchTree_##obj##_Iterator BST_##obj##_insert(BinarySearchTree_##obj* bst
     } \
   } \
 \
-  return Iterator_##obj##_new(bst, &newNode_##obj->link); \
+  return Iterator_##obj##_new(bst, &newNode->link); \
 } \
 \
 BinarySearchTree_##obj##_Iterator Iterator_##obj##_new(BinarySearchTree_##obj* bst, Link* link) { \
