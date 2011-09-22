@@ -146,27 +146,25 @@ void BST_##obj##_erase(BinarySearchTree_##obj* bst, BinarySearchTree_##obj##_Ite
   Node_##obj* replacement = NULL; \
 \
   if(node->left == NULL && node->right == NULL) { \
-    *node->backReference = NULL; \
-  } else { \
-    if(node->left != NULL) { \
-      replacement = node->left; \
-    } else if(node->right != NULL) { \
-      replacement = node->right; \
-    } \
-    *node->backReference = replacement; \
+    if(node == bst->root) printf("deleting root\n"); else printf("deleting leaf\n"); \
+    if(node == bst->root) bst->root = bst->sentinel; \
+  } else if(node->left != NULL && node->right == NULL) { \
+    printf("deleting with left\n"); \
+    replacement = node->left; \
     *replacement->backReference = NULL; \
+  } else if(node->left == NULL && node->right != NULL) { \
+    printf("deleting with right\n"); \
+    replacement = node->right; \
+    *replacement->backReference = NULL; \
+  } else { \
+    printf("deleting with two\n"); \
+    replacement = (Node_##obj*)node->link.previous; \
+    if(replacement->left != NULL) *replacement->backReference = replacement->left; \
   } \
+  *node->backReference = replacement; \
 \
   node->link.previous->next = node->link.next; \
   node->link.next->previous = node->link.previous; \
-\
-  if(bst->root == node) { \
-    if(replacement == NULL) { \
-      bst->root = (Node_##obj*)bst->sentinel; \
-    } else { \
-      bst->root = replacement; \
-    } \
-  } \
 \
   free(node); \
 } \
