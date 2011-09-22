@@ -146,18 +146,14 @@ void BST_##obj##_erase(BinarySearchTree_##obj* bst, BinarySearchTree_##obj##_Ite
   Node_##obj* replacement = NULL; \
 \
   if(node->left == NULL && node->right == NULL) { \
-    if(node == bst->root) printf("deleting root\n"); else printf("deleting leaf\n"); \
     if(node == bst->root) replacement = bst->sentinel; \
   } else if(node->left != NULL && node->right == NULL) { \
-    printf("deleting with left\n"); \
     replacement = node->left; \
     *replacement->backReference = NULL; \
   } else if(node->left == NULL && node->right != NULL) { \
-    printf("deleting with right\n"); \
     replacement = node->right; \
     *replacement->backReference = NULL; \
   } else { \
-    printf("deleting with two\n"); \
     replacement = (Node_##obj*)node->link.previous; \
     if(replacement->left != NULL) *replacement->backReference = replacement->left; \
   } \
