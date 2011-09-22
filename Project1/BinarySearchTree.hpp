@@ -27,7 +27,7 @@ typedef struct BinarySearchTree_##obj##_Iterator_ { \
 typedef struct BinarySearchTree_##obj##_ { \
   Node_##obj* root; \
   Node_##obj* sentinel; \
-  const char* type; \
+  char type[sizeof("BinarySearchTree_" #obj)]; \
   BinarySearchTree_##obj##_Iterator (*insert)(BinarySearchTree_##obj##_*, obj); \
   void (*erase)(BinarySearchTree_##obj##_*, BinarySearchTree_##obj##_Iterator); \
   BinarySearchTree_##obj##_Iterator (*begin)(BinarySearchTree_##obj##_*); \
@@ -64,7 +64,7 @@ BinarySearchTree_##obj* BinarySearchTree_##obj##_new(bool(*comparator)(const obj
   sentinel->link.previous = &sentinel->link; \
   bst->sentinel = sentinel; \
   bst->root = sentinel; \
-  bst->type = "BinarySearchTree_" #obj; \
+  strcpy(bst->type, "BinarySearchTree_" #obj); \
   bst->comparator = comparator; \
   bst->insert = &BST_##obj##_insert; \
   bst->delet = &BST_##obj##_delet; \
