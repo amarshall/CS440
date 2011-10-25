@@ -1,0 +1,43 @@
+<cluster xmlns:ns="http://cs.binghamton.edu" xmlns:ns1="http://saturn.cs.binghamton.edu" xmlns:ns2="http://jupiter.cs.binghamton.edu"
+										     xmlns:ns3="http://alpha.cs.binghamton.edu"  xmlns:ns4="http://brabo.cs.binghamton.edu">
+list of computer names (for testing with valid input)
+	<ns:computers>computer names (Test white space in tag : 4 combinations)
+		<ns1:same_name>saturn (Test same name with different namespaces</ns1:same_name	>
+		<ns2:same_name>jupiter</ns2:same_name	>
+		<ns3:same_name>alpha</ns3:same_name>
+		<ns4:same_name>bravo</ns4:same_name>
+	</ns:computers>
+	<ns:othercoms xmlns:ns1="http://class.cs.binghamton.edu">class machine name (Test rebounded namespace)
+		<ns1:machine1>swoop</ns1:machine1	>
+		<ns1:machine2	>snarl</ns1:machine2 >
+		<ns1:machine3	>slag</ns1:machine3 >
+		<ns1:machine4	>grimlock</ns1:machine4	>
+		<ns1:machine5	>jazz</ns1:machine5	>
+		<ns1:machine6	>brawn</ns1:machine6>
+		<ns1:machine7	>prowl</ns1:machine7>
+		<ns1:machine8	    >bumblebee</ns1:machine8     >
+	</ns:othercoms	>
+	<unknown	>unknown_machines (Test no namespace)
+		<name1
+		>Test newline in tag
+		</name1
+		>
+		<name2>Test 
+		"\n"
+		       and spaces</name2>
+		<ns1:name3	>Test namespace scope (ns1 should be http://saturn.cs.binghamton.edu)</ns1:name3	>
+		<name4> Test the capability to increase depth
+			<depth1>a
+				<depth2>b
+					<depth3 xmlns:ns2="/http://test_depth">c
+						<ns2:depth4>d
+							<ns2:depth5>e</ns2:depth5>
+						</ns2:depth4>
+					</depth3>
+				</depth2>
+			</depth1>
+		</name4>
+		<ns2:name5></ns2:name5>
+		<name6></name6>
+	</unknown	>
+</cluster>

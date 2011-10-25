@@ -1,0 +1,29 @@
+XML Performance Test Document Generator
+----------------------------------------
+
+example:
+	 
+arguments: outpuf file, level, the number of namespace in each level, iteration N
+
+./gen testdoc.xml 4 6 0.25 30000
+
+Correctness Test Files
+----------------------
+
+test1.xml
+test2.xml
+
+Bad Input Test File
+-------------------
+
+bad.xml
+    Don't crash on any of errors.
+
+Sample Solution
+---------------
+
+sample_solution.32
+    Compiled for 32-bit x86.
+
+sample_solution.64
+    Compiled for 64-bit x86.
