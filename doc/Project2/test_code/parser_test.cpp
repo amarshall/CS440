@@ -158,7 +158,7 @@ main(int argc, char *argv[]) {
     int fd = open(infile, O_RDONLY);
     if(fd < 0)
     {
-        cerr<<"Open file failed : "<<strerror(errno)<<endl;	
+        cerr<<"Open file failed : "<<strerror(errno)<<endl;
         return 1;
     }
 

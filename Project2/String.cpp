@@ -1,20 +1,32 @@
 #include "String.hpp"
 
-String::String(const std::string& s) {
-  data = s;
+xml::String::String() {
+  data = NULL;
+  length = NULL;
 }
 
-String& String::operator=(const String& s) {
-  data = s.data;
+xml::String::String(const char* d, int l) {
+  data = d;
+  length = l;
+}
+
+xml::String::operator std::string() const {
+  return std::string(data, length);
+}
+
+xml::String& xml::String::operator+=(const int& l) {
+  length += l;
   return *this;
 }
 
-String & String::operator+=(const std::string& s) {
-  data += s;
-  return *this;
+void xml::String::append(int i) {
+  length += i;
 }
 
-String & String::operator+=(const char& c) {
-  data += c;
-  return *this;
+int xml::String::size() {
+  return length;
+}
+
+bool xml::String::operator==(const String& s) {
+  return ((const std::string)s).compare(0, length, data) == 0;
 }

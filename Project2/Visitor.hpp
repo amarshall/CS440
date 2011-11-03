@@ -2,12 +2,15 @@
 #define JAM_VISITOR_HPP
 
 #include "Element.hpp"
+#include "Text.hpp"
 
-class Visitor {
-  // public:
-    // virtual void start_element_visit(const Element&) = 0;
-    // virtual void end_element_visit(const Element&) = 0;
-    // virtual void visit_text(const Text&) = 0;
-};
+namespace xml {
+  class Visitor {
+    public:
+      virtual void start_element_visit(const Element&) = 0;
+      virtual void end_element_visit(const Element&) = 0;
+      virtual void visit_text(const Text&) = 0;
+  };
+}
 
 #endif
