@@ -3,7 +3,7 @@
 
 xml::String::String() {
   data = NULL;
-  length = NULL;
+  length = 0;
 }
 
 // void xml::String::printme() {

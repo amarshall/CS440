@@ -157,6 +157,7 @@ const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
   for(unsigned int i = 0; i < root->n_children(); ++i) {
     std::cerr << "root child: " << root->child(i) << std::endl;
   }
+  delete accumulator;
 
   return root;
 }

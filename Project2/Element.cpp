@@ -6,6 +6,14 @@ xml::Element::Element() {
   tagNamespace = NULL;
 }
 
+xml::Element::~Element() {
+  delete tagName;
+  delete tagNamespace;
+  for(std::list<Node*>::iterator it = children.begin(); it != children.end(); ++it) {
+    delete *it;
+  }
+}
+
 const xml::String& xml::Element::name() const {
   return *tagName;
 }

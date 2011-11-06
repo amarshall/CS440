@@ -9,6 +9,7 @@ namespace xml {
     friend class Parser;
 
     public:
+      ~Text();
       const String& str() const;
       static bool is_Text(const Node*);
       static const Text* to_Text(const Node*);

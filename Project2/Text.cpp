@@ -1,5 +1,9 @@
 #include "Text.hpp"
 
+xml::Text::~Text() {
+  delete data;
+}
+
 bool xml::Text::is_Text(const Node* node) {
   return dynamic_cast<const Text*>(node) != NULL;
 }

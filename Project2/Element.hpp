@@ -13,6 +13,7 @@ namespace xml {
 
     public:
       Element();
+      ~Element();
       const String& name() const;
       const String& nmspace() const;
       size_t n_children() const;
