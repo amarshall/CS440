@@ -21,10 +21,6 @@ bool xml::Parser::validTextChar(const char& c) {
 }
 
 void xml::Parser::saveElement(Element* element) {
-  std::cerr << "Saving node with name: " << *accumulator;
-  if(nodeStack.size()) std::cerr << " as child of " << *nodeStack.top()->tagName;
-  std::cerr << std::endl;
-
   element->tagName = accumulator;
   if(nodeStack.size()) nodeStack.top()->children.push_back(element);
   if(nodeStack.size()) assert(nodeStack.top()->children.back() != NULL);
@@ -33,10 +29,6 @@ void xml::Parser::saveElement(Element* element) {
 }
 
 void xml::Parser::saveText(Text* text) {
-  std::cerr << "Saving text: " << *accumulator;
-  if(nodeStack.size()) std::cerr << " as child of " << *nodeStack.top()->tagName;
-  std::cerr << std::endl;
-
   text->data = accumulator;
   if(nodeStack.size()) nodeStack.top()->children.push_back(text);
   assert(nodeStack.top()->children.back() != NULL);
@@ -56,9 +48,6 @@ const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
     if(c == EOF) break;
 
     while(true) {
-      // std::cerr << "STATE: " << state << " | Stack: " << nodeStack.size();
-      // if(accumulator != NULL) std::cerr << " | Accumulator: " << *accumulator;
-      // std::cerr << std::endl;
       try {
         switch(state) {
           case START:
@@ -154,9 +143,6 @@ const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
   }
   if(nodeStack.size() != 0) throw ParseError("Unclosed tags.");
 
-  for(unsigned int i = 0; i < root->n_children(); ++i) {
-    std::cerr << "root child: " << root->child(i) << std::endl;
-  }
   delete accumulator;
 
   return root;
