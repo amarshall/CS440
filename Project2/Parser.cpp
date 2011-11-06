@@ -1,6 +1,8 @@
 #include <assert.h>
 #include <stack>
 #include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string>
 #include "Element.hpp"
 #include "Parser.hpp"

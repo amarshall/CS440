@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string.h>
 #include "String.hpp"
 
 xml::String::String() {
