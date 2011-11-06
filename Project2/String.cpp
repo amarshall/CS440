@@ -37,7 +37,7 @@ int xml::String::size() {
 }
 
 bool xml::String::operator==(const String& s) {
-  return ((const std::string)s).compare(0, length, data) == 0;
+  return strncmp(data, s.data, length) == 0;
 }
 
 bool operator==(const std::string&, const xml::String&) {
