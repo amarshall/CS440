@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-g -Wall -Wextra -Werror -Wformat=2 -Wfloat-equal -Wshadow -Wwrite-strings -Winit-self -pedantic-errors -Wno-long-long # -Winline -Wpadded
+CFLAGS=-g -Wall -Wextra -Werror -Wformat=2 -Wfloat-equal -Wshadow -Wwrite-strings -Winit-self -Weffc++ -pedantic-errors -Wno-long-long # -Winline -Wpadded
 BINARY=parser
 SRC_FILES=Element.cpp Node.cpp Parser.cpp String.cpp Text.cpp Visitor.cpp parser_test.cpp
 .PHONY: clean

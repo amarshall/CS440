@@ -20,7 +20,7 @@ size_t xml::Element::n_children() const {
 
 const Node* xml::Element::child(size_t n) const {
   std::list<Node*>::const_iterator it = children.begin();
-  for(unsigned int i = 0; it != children.end() && i < n; it++) {};
+  std::advance(it, n);
   return *it;
 }
 
