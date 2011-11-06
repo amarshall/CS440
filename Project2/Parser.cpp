@@ -107,7 +107,7 @@ const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
             } else if(isspace(c)) {
               // Continue
             } else if(c == '>' && accumulator->size() != 0) {
-              if(nodeStack.top()->tagName == accumulator) {
+              if(*nodeStack.top()->tagName == *accumulator) {
                 nodeStack.pop();
                 accumulator = NULL;
               } else {
