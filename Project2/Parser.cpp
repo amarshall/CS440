@@ -110,6 +110,7 @@ const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
               if(*nodeStack.top()->tagName == *accumulator) {
                 nodeStack.pop();
                 accumulator = NULL;
+                state = IN_DOC;
               } else {
                 throw ParseError("Open/close tag mismatch.");
               }
