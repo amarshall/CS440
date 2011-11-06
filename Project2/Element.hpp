@@ -16,7 +16,7 @@ namespace xml {
       const String& name() const;
       const String& nmspace() const;
       size_t n_children() const;
-      const Node* child(size_t i) const;
+      const Node* child(size_t) const;
       void accept(Visitor*) const;
       static bool is_Element(const Node*);
       static const Element *to_Element(const Node*);

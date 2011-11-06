@@ -1,9 +1,18 @@
+#include <iostream>
 #include "String.hpp"
 
 xml::String::String() {
   data = NULL;
   length = NULL;
 }
+
+// void xml::String::printme() {
+  // fprintf(stderr, "String: ");
+  // for(int i = 0; i < length; ++i) {
+    // fprintf(stderr, "%c", data[i]);
+  // }
+  // fprintf(stderr, "\n");
+// }
 
 xml::String::String(const char* d, int l) {
   data = d;
@@ -29,4 +38,41 @@ int xml::String::size() {
 
 bool xml::String::operator==(const String& s) {
   return ((const std::string)s).compare(0, length, data) == 0;
+}
+
+bool operator==(const std::string&, const xml::String&) {
+  return false; //FIXME
+}
+
+bool operator==(const xml::String&, const std::string&) {
+  return false; //FIXME
+}
+
+bool operator!=(const std::string&, const xml::String&) {
+  return false; //FIXME
+}
+
+bool operator!=(const xml::String&, const std::string&) {
+  return false; //FIXME
+}
+
+bool operator==(const char*, const xml::String&) {
+  return false; //FIXME
+}
+
+bool operator==(const xml::String&, const char*) {
+  return false; //FIXME
+}
+
+bool operator!=(const char*, const xml::String&) {
+  return false; //FIXME
+}
+
+bool operator!=(const xml::String&, const char*) {
+  return false; //FIXME
+}
+
+std::ostream& operator<<(std::ostream& out, const xml::String& string) {
+  out << std::string(string.data, string.length); //FIXME
+  return out;
 }

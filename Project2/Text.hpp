@@ -1,6 +1,9 @@
 #ifndef JAM_TEXT_HPP
 #define JAM_TEXT_HPP
 
+#include "Node.hpp"
+#include "String.hpp"
+
 namespace xml {
   class Text : public Node {
     friend class Parser;

@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-g -Wall -Wextra -Werror -Wformat=2 -Wfloat-equal -Wshadow -Wwrite-strings -Winit-self -Wmissing-declarations -pedantic-errors # -Winline -Wpadded
+CFLAGS=-g -Wall -Wextra -Werror -Wformat=2 -Wfloat-equal -Wshadow -Wwrite-strings -Winit-self -pedantic-errors -Wno-long-long # -Winline -Wpadded
 BINARY=parser
 SRC_FILES=Element.cpp Node.cpp Parser.cpp String.cpp Text.cpp Visitor.cpp parser_test.cpp
 .PHONY: clean
@@ -16,14 +16,14 @@ all: $(BINARY)
 generator: XmlGenerator.cpp gen.cpp
 	$(CC) -O $^ -o $@
 
-$(BINARY): $(SRC_FILES:%.c=%.o)
+$(BINARY): $(SRC_FILES:%.cpp=%.o)
 	@$(CC) $(LDFLAGS) $^ -o $@
 
-%.o: %.c %.h
+%.o: %.cpp %.hpp
 	@$(CC) $(CFLAGS) -c $<
 
-%.o: %.c
+%.o: %.cpp
 	@$(CC) $(CFLAGS) -c $<
 
 clean:
-	rm -rf *.o *.dSYM $(BINARY) generator
+	rm -rf *.o *.dSYM *.plist $(BINARY) generator

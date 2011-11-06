@@ -15,7 +15,7 @@ namespace xml {
       void append(int);
       int size();
 
-    private:
+    // private: //FIXME
       const char* data;
       int length;
   };

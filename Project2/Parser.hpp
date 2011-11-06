@@ -23,10 +23,11 @@ namespace xml {
       std::stack<Element*> nodeStack;
       enum { START = 1, IN_DOC, IN_TAG, IN_START_TAG, IN_TEXT, IN_END_TAG, FINISHED } state;
       // enum { START = 1, IN_TAG_NAME, IN_TAG_NAMESPACE_NAME, IN_TAG_NAMESPACE_URI, CLOSE } elementState;
-      void saveElement(Node*&, String*&);
-      void saveText(Node*&, String*&);
+      void saveElement(Node*, String*&);
+      void saveText(Node*, String*&);
       bool validTagChar(const char&);
       bool validTextChar(const char&);
+      void requestNewAccumulator(String*, const char*);
   };
 }
 
