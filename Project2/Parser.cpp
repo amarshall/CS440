@@ -8,6 +8,7 @@
 xml::Parser::Parser() {
   state = START;
   root = NULL;
+  accumulator = NULL;
 }
 
 bool xml::Parser::validTagChar(const char& c) {
@@ -18,27 +19,28 @@ bool xml::Parser::validTextChar(const char& c) {
   return c != '<' && c != '>';
 }
 
-void xml::Parser::saveElement(Node* node, String*& tagName) {
-  std::cerr << "Saving node with name: " << *tagName << std::endl;
+void xml::Parser::saveElement(Node* node) {
+  std::cerr << "Saving node with name: " << *accumulator << std::endl;
   Element* element = dynamic_cast<Element*>(node);
-  element->tagName = tagName;
+  element->tagName = accumulator;
   nodeStack.push(element);
   if(nodeStack.size()) nodeStack.top()->children.push_back(node);
+  accumulator = NULL;
 }
 
-void xml::Parser::saveText(Node* node, String*& text) {
-  std::cerr << "Saving text: " << *text << std::endl;
-  dynamic_cast<Text*>(node)->data = text;
+void xml::Parser::saveText(Node* node) {
+  std::cerr << "Saving text: " << *accumulator << std::endl;
+  dynamic_cast<Text*>(node)->data = accumulator;
   if(nodeStack.size()) nodeStack.top()->children.push_back(node);
+  accumulator = NULL;
 }
 
-void xml::Parser::requestNewAccumulator(String* accumulator, const char* pos) {
+void xml::Parser::requestNewAccumulator(const char* pos) {
   if(accumulator == NULL) accumulator = new String(pos, 0);
 }
 
 const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
   Node* node = new Element();
-  String* accumulator = NULL;
   bool whitespace = false;
 
   for(unsigned int i = 0; i < dataSize; ++i) {
@@ -71,6 +73,7 @@ const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
             } else {
               node = new Text();
               state = IN_TEXT;
+              continue;
             }
             break;
 
@@ -84,13 +87,13 @@ const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
             break;
 
           case IN_START_TAG:
-            requestNewAccumulator(accumulator, data + i);
+            requestNewAccumulator(data + i);
             if(validTagChar(c) && !whitespace) {
               accumulator->append(1);
             } else if(isspace(c)) {
               // Continue
             } else if(c == '>' && accumulator->size() != 0) {
-              saveElement(node, accumulator);
+              saveElement(node);
               state = IN_DOC;
             } else {
               throw ParseError("Invalid tag inner text.");
@@ -98,6 +101,7 @@ const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
             break;
 
           case IN_END_TAG:
+            requestNewAccumulator(data + i);
             if(validTagChar(c) && !whitespace) {
               accumulator->append(1);
             } else if(isspace(c)) {
@@ -105,6 +109,7 @@ const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
             } else if(c == '>' && accumulator->size() != 0) {
               if(nodeStack.top()->tagName == accumulator) {
                 nodeStack.pop();
+                accumulator = NULL;
               } else {
                 throw ParseError("Open/close tag mismatch.");
               }
@@ -114,9 +119,11 @@ const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
             break;
 
           case IN_TEXT:
+            requestNewAccumulator(data + i);
             if(c == '<') {
-              saveText(node, accumulator);
-              state = IN_TAG;
+              saveText(node);
+              state = IN_DOC;
+              continue;
             } else if(validTextChar(c)) {
               accumulator->append(1);
             }
