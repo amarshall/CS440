@@ -120,6 +120,7 @@ const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
             break;
 
           case IN_TEXT:
+            if(nodeStack.size() == 0) throw ParseError("Text outside root");
             requestNewAccumulator(data + i);
             if(c == '<') {
               saveText(node);
