@@ -129,9 +129,6 @@ const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
               accumulator->append(1);
             }
             break;
-
-          case FINISHED:
-            break;
         }
       } catch(const Parser::ParseError &e) {
         std::cerr << e.msg() << std::endl;
