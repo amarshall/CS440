@@ -41,6 +41,7 @@ void xml::Element::accept(Visitor* visitor) const {
       visitor->visit_text(*dynamic_cast<Text*>(*it));
     }
   }
+  visitor->end_element_visit(*this);
 }
 
 bool xml::Element::is_Element(const Node* node ) {
