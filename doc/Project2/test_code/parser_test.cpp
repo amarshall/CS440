@@ -67,7 +67,7 @@ class MyVisitor : public xml::Visitor {
 
 void
 MyVisitor::start_element_visit(const xml::Element &e) {
-    cout << string(indent, ' ') << "Starting visit of element " << /*e.nmspace() <<*/ ":"
+    cout << string(indent, ' ') << "Starting visit of element " << e.nmspace() << ":"
          << e.name() << "..." << endl;
     indent += 2;
 }
@@ -75,7 +75,7 @@ MyVisitor::start_element_visit(const xml::Element &e) {
 void
 MyVisitor::end_element_visit(const xml::Element &e) {
     indent -= 2;
-    cout << string(indent, ' ') << "Ending visit of element " << /*e.nmspace() <<*/ ":"
+    cout << string(indent, ' ') << "Ending visit of element " << e.nmspace() << ":"
          << e.name() << "." << endl;
 }
 
@@ -92,11 +92,11 @@ traverse(const Node *n, size_t indent_size) {
     if (Element::is_Element(n)) {
 
         const Element *e = Element::to_Element(n);
-        cout << indent << "Start: " << /*e->nmspace() <<*/ ":" << e->name() << " c:" << e->n_children() << endl;
+        cout << indent << "Start: " << e->nmspace() << ":" << e->name() << endl;
         for (size_t i = 0; i < e->n_children(); i++) {
             traverse(e->child(i), indent_size + 2);
         }
-        cout << indent << "End: " << /*e->nmspace() <<*/ ":" << e->name() << endl;
+        cout << indent << "End: " << e->nmspace() << ":" << e->name() << endl;
 
     } else if (Text::is_Text(n)) {
 

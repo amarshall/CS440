@@ -22,8 +22,13 @@ bool xml::Parser::validTextChar(const char& c) {
   return c != '<' && c != '>';
 }
 
+bool xml::Parser::validURIChar(const char& c) {
+  return c != '"';
+}
+
 void xml::Parser::saveElement(Element* element) {
-  element->tagName = accumulator;
+  if(element->tagNamespace == NULL) element->tagNamespace = new String();
+  if(element->tagNamespaceId == NULL) element->tagNamespaceId = new String();
   if(nodeStack.size()) nodeStack.top()->children.push_back(element);
   if(nodeStack.size()) assert(nodeStack.top()->children.back() != NULL);
   nodeStack.push(element);
@@ -44,12 +49,17 @@ void xml::Parser::requestNewAccumulator(const char* pos) {
 const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
   Node* node = new Element();
   bool whitespace = false;
+  String* lastAccumulator; // WARNING: This isn't always the last one, just when needed.
 
   for(unsigned int i = 0; i < dataSize; ++i) {
     const char c = data[i];
     if(c == EOF) break;
 
     while(true) {
+      std::cerr << "Looking at '" << c << "' | " << "State: " << state << " | Stack: " << nodeStack.size();
+      if(nodeStack.size() > 0) std::cerr << " " << nodeStack.top()->nmspaceId() << ":" << nodeStack.top()->name();
+      if(accumulator != NULL) std::cerr << " | Accumulator: " << *accumulator;
+      std::cerr << std::endl;
       try {
         switch(state) {
           case START:
@@ -79,20 +89,62 @@ const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
 
           case IN_TAG:
             if(c == '/') {
-              state = IN_END_TAG;
+              state = IN_END_TAG_NS_NAME;
             } else {
-              state = IN_START_TAG;
+              state = IN_START_TAG_NS_NAME;
+              std::map<String, String*>* map;
+              if(namespaceStack.size() == 0) {
+                map = new std::map<String, String*>;
+              } else {
+                map = new std::map<String, String*>(*namespaceStack.top());
+              }
+              namespaceStack.push(map);
               continue;
             }
             break;
 
-          case IN_START_TAG:
+          case IN_START_TAG_NS_NAME:
             requestNewAccumulator(data + i);
-            if(validTagChar(c) && !whitespace) {
+            if(c == ':' && accumulator->size() != 0) {
+              //TODO: Check namespace is defined.
+              std::cerr << "***Saving namespace to node: " << *accumulator << std::endl;
+              dynamic_cast<Element*>(node)->tagNamespace = (*namespaceStack.top())[*accumulator];
+              dynamic_cast<Element*>(node)->tagNamespaceId = accumulator;
+              accumulator = NULL;
+              state = IN_START_TAG_NAME;
+            } else if(isspace(c) || c == '>') {
+              state = IN_START_TAG_NAME;
+              continue;
+            } else if(validTagChar(c)) {
               accumulator->append(1);
-            } else if(isspace(c)) {
+            } else {
+              throw ParseError("Invalid tag name/namespace.");
+            }
+            break;
+
+          case IN_START_TAG_NAME:
+            requestNewAccumulator(data + i);
+            if(validTagChar(c)) {
+              accumulator->append(1);
+            } else if(isspace(c) || c == '>') {
+              std::cerr << "***Saving name to node: " << *accumulator << std::endl;
+              dynamic_cast<Element*>(node)->tagName = accumulator;
+              accumulator = NULL;
+              state = IN_START_TAG;
+              continue;
+            } else {
+              throw ParseError("Invalid tagname.");
+            }
+            break;
+
+          case IN_START_TAG:
+            assert(accumulator == NULL); //FIXME
+            if(isspace(c)) {
               // Continue
-            } else if(c == '>' && accumulator->size() != 0) {
+            } else if(validTagChar(c)) {
+              state = IN_TAG_NS_DEF;
+              continue;
+            } else if(c == '>') {
               saveElement((Element*)node);
               state = IN_DOC;
             } else {
@@ -100,25 +152,96 @@ const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
             }
             break;
 
-          case IN_END_TAG:
+          case IN_TAG_NS_DEF:
             requestNewAccumulator(data + i);
-            if(validTagChar(c) && !whitespace) {
+            if(validTagChar(c)) {
               accumulator->append(1);
-            } else if(isspace(c)) {
-              // Continue
-            } else if(c == '>' && accumulator->size() != 0) {
-              if(*nodeStack.top()->tagName == *accumulator) {
-                nodeStack.pop();
-                delete accumulator;
-                accumulator = NULL;
-                delete node;
-                node = NULL;
-                state = IN_DOC;
-              } else {
-                throw ParseError("Open/close tag mismatch.");
-              }
+            } else if(c == ':' && *accumulator == "xmlns") {
+              accumulator = NULL;
+              state = IN_TAG_NS_LVAL;
             } else {
-              throw ParseError("Invalid tag inner text.");
+              throw ParseError("Invalid tag inner text (NSdef).");
+            }
+            break;
+
+          case IN_TAG_NS_LVAL:
+            requestNewAccumulator(data + i);
+            if(validTagChar(c)) {
+              accumulator->append(1);
+            } else if(c == '=') {
+              lastAccumulator = accumulator;
+              accumulator = NULL;
+              state = IN_TAG_NS_EQUALS;
+            } else {
+              throw ParseError("Invalid tag inner text (NSname).");
+            }
+            break;
+
+          case IN_TAG_NS_EQUALS:
+            if(c == '"') {
+              state = IN_TAG_NS_RVAL;
+            } else {
+              throw ParseError("Invalid namespace definition.");
+            }
+            break;
+
+          case IN_TAG_NS_RVAL:
+            requestNewAccumulator(data + i);
+            if(validURIChar(c)) {
+              accumulator->append(1);
+            } else if(c == '"') {
+              (*namespaceStack.top())[*lastAccumulator] = accumulator;
+              lastAccumulator = NULL;
+              accumulator = NULL;
+              state = IN_START_TAG;
+            } else {
+              throw ParseError("Invalid NS URI.");
+            }
+            break;
+
+          case IN_END_TAG_NS_NAME:
+            requestNewAccumulator(data + i);
+            if(c == ':' && accumulator->size() != 0 && nodeStack.top()->nmspaceId() == *accumulator) {
+              accumulator = NULL;
+              state = IN_END_TAG_NAME;
+            } else if(isspace(c) || c == '>') {
+              state = IN_END_TAG_NAME;
+              continue;
+            } else if(validTagChar(c)) {
+              accumulator->append(1);
+            } else {
+              throw ParseError("Invalid/mismatched end tag name/namespace.");
+            }
+            break;
+
+          case IN_END_TAG_NAME:
+            requestNewAccumulator(data + i);
+            if(isspace(c)) {
+              // Continue;
+            } else if(validTagChar(c) && !whitespace) {
+              accumulator->append(1);
+            } else if(isspace(c) || c == '>') {
+              state = IN_END_TAG;
+              continue;
+            } else {
+              throw ParseError("Invalid end tag inner text.");
+            }
+            break;
+
+          case IN_END_TAG:
+            if(isspace(c)) {
+              // Continue
+            } else if(c == '>' && nodeStack.top()->name() == *accumulator) {
+              nodeStack.pop();
+              delete namespaceStack.top();
+              namespaceStack.pop();
+              delete accumulator;
+              accumulator = NULL;
+              delete node;
+              node = NULL;
+              state = IN_DOC;
+            } else {
+              throw ParseError("Invalid/mismatched end tag.");
             }
             break;
 

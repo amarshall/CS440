@@ -16,6 +16,7 @@ namespace xml {
       ~Element();
       const String& name() const;
       const String& nmspace() const;
+      const String& nmspaceId() const;
       size_t n_children() const;
       const Node* child(size_t) const;
       void accept(Visitor*) const;
@@ -25,6 +26,7 @@ namespace xml {
     private:
       String* tagName;
       String* tagNamespace;
+      String* tagNamespaceId;
       std::list<Node*> children;
   };
 }

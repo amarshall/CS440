@@ -4,11 +4,13 @@
 xml::Element::Element() {
   tagName = NULL;
   tagNamespace = NULL;
+  tagNamespaceId = NULL;
 }
 
 xml::Element::~Element() {
   delete tagName;
-  delete tagNamespace;
+  // delete tagNamespace; // TODO: auto_ptr
+  delete tagNamespaceId;
   for(std::list<Node*>::iterator it = children.begin(); it != children.end(); ++it) {
     delete *it;
   }
@@ -20,6 +22,10 @@ const xml::String& xml::Element::name() const {
 
 const xml::String& xml::Element::nmspace() const {
   return *tagNamespace;
+}
+
+const xml::String& xml::Element::nmspaceId() const {
+  return *tagNamespaceId;
 }
 
 size_t xml::Element::n_children() const {

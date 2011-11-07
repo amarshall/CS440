@@ -58,7 +58,6 @@ bool operator==(const std::string&, const xml::String&) {
 }
 
 bool operator==(const xml::String& S, const std::string& s) {
-  assert(false);
   return (std::string)S == s;
 }
 
@@ -78,7 +77,6 @@ bool operator==(const char*, const xml::String&) {
 }
 
 bool operator==(const xml::String& S, const char* c) {
-  assert(false);
   return strncmp(S.data, c, S.length) == 0;
 }
 
