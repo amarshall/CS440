@@ -11,9 +11,12 @@ namespace xml {
       String(const String&);
       operator std::string() const;
       String& operator+=(const int&);
-      bool operator==(const String&);
+      bool operator==(const String&) const;
+      bool operator<(const String&) const;
       void append(int);
       int size();
+      static int comparator(const String&, const String&);
+      static int comparator(const String*, const String*);
 
     // private: //FIXME
       const char* data;
