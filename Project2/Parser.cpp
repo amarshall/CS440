@@ -266,6 +266,8 @@ const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
   if(nodeStack.size() != 0) throw ParseError("Unclosed tags.");
 
   delete accumulator;
+  accumulator = NULL;
+  while(!namespaceStack.empty()) namespaceStack.pop();
 
   return root;
 }
