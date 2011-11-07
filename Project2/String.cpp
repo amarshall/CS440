@@ -7,14 +7,6 @@ xml::String::String() {
   length = 0;
 }
 
-// void xml::String::printme() {
-  // fprintf(stderr, "String: ");
-  // for(int i = 0; i < length; ++i) {
-    // fprintf(stderr, "%c", data[i]);
-  // }
-  // fprintf(stderr, "\n");
-// }
-
 xml::String::String(const char* d, int l) {
   data = d;
   length = l;
