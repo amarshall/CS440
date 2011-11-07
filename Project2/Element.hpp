@@ -25,7 +25,7 @@ namespace xml {
 
     private:
       String* tagName;
-      String* tagNamespace;
+      const String* tagNamespace;
       String* tagNamespaceId;
       std::list<Node*> children;
   };

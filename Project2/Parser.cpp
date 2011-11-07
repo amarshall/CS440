@@ -88,11 +88,11 @@ const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
               state = IN_END_TAG_NS_NAME;
             } else {
               state = IN_START_TAG_NS_NAME;
-              std::map<String, String*>* map;
+              std::map<const String, const String*>* map;
               if(namespaceStack.size() == 0) {
-                map = new std::map<String, String*>;
+                map = new std::map<const String, const String*>;
               } else {
-                map = new std::map<String, String*>(*namespaceStack.top());
+                map = new std::map<const String, const String*>(*namespaceStack.top());
               }
               namespaceStack.push(map);
               continue;
