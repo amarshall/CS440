@@ -56,10 +56,6 @@ const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
     if(c == EOF) break;
 
     while(true) {
-      std::cerr << "Looking at '" << c << "' | " << "State: " << state << " | Stack: " << nodeStack.size();
-      if(nodeStack.size() > 0) std::cerr << " " << nodeStack.top()->nmspaceId() << ":" << nodeStack.top()->name();
-      if(accumulator != NULL) std::cerr << " | Accumulator: " << *accumulator;
-      std::cerr << std::endl;
       try {
         switch(state) {
           case START:
@@ -107,7 +103,6 @@ const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
             requestNewAccumulator(data + i);
             if(c == ':' && accumulator->size() != 0) {
               //TODO: Check namespace is defined.
-              std::cerr << "***Saving namespace to node: " << *accumulator << std::endl;
               dynamic_cast<Element*>(node)->tagNamespace = (*namespaceStack.top())[*accumulator];
               dynamic_cast<Element*>(node)->tagNamespaceId = accumulator;
               accumulator = NULL;
@@ -127,7 +122,6 @@ const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
             if(validTagChar(c)) {
               accumulator->append(1);
             } else if(isspace(c) || c == '>') {
-              std::cerr << "***Saving name to node: " << *accumulator << std::endl;
               dynamic_cast<Element*>(node)->tagName = accumulator;
               accumulator = NULL;
               state = IN_START_TAG;
