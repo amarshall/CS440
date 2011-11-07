@@ -41,35 +41,45 @@ bool xml::String::operator==(const String& s) {
   return strncmp(data, s.data, length) == 0;
 }
 
+#include <assert.h> //FIXME
+
 bool operator==(const std::string&, const xml::String&) {
+  assert(false);
   return false; //FIXME
 }
 
 bool operator==(const xml::String&, const std::string&) {
   return false; //FIXME
+  assert(false);
 }
 
 bool operator!=(const std::string&, const xml::String&) {
+  assert(false);
   return false; //FIXME
 }
 
 bool operator!=(const xml::String&, const std::string&) {
+  assert(false);
   return false; //FIXME
 }
 
 bool operator==(const char*, const xml::String&) {
+  assert(false);
   return false; //FIXME
 }
 
 bool operator==(const xml::String&, const char*) {
   return false; //FIXME
+  assert(false);
 }
 
 bool operator!=(const char*, const xml::String&) {
+  assert(false);
   return false; //FIXME
 }
 
 bool operator!=(const xml::String&, const char*) {
+  assert(false);
   return false; //FIXME
 }
 
