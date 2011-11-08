@@ -27,8 +27,12 @@ bool xml::Parser::validURIChar(const char& c) {
 }
 
 void xml::Parser::saveElement(Element* element) {
-  if(element->tagNamespace == NULL) element->tagNamespace = new String();
-  if(element->tagNamespaceId == NULL) element->tagNamespaceId = new String();
+  if(element->tagNamespaceId == NULL) {
+    element->tagNamespaceId = new String();
+    element->tagNamespace = new String();
+  } else {
+    element->tagNamespace = (*namespaceStack.top())[*element->tagNamespaceId];
+  }
   if(nodeStack.size()) nodeStack.top()->children.push_back(element);
   if(nodeStack.size()) assert(nodeStack.top()->children.back() != NULL);
   nodeStack.push(element);
@@ -103,7 +107,6 @@ const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
             requestNewAccumulator(data + i);
             if(c == ':' && accumulator->size() != 0) {
               //TODO: Check namespace is defined.
-              dynamic_cast<Element*>(node)->tagNamespace = (*namespaceStack.top())[*accumulator];
               dynamic_cast<Element*>(node)->tagNamespaceId = accumulator;
               accumulator = NULL;
               state = IN_START_TAG_NAME;
