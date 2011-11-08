@@ -251,6 +251,8 @@ const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
               continue;
             } else if(validTextChar(c)) {
               accumulator->append(1);
+            } else {
+              throw ParseError("Bad text.");
             }
             break;
 
