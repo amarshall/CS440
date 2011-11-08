@@ -150,6 +150,7 @@ const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
             if(validTagChar(c)) {
               accumulator->append(1);
             } else if(c == ':' && *accumulator == "xmlns") {
+              delete accumulator;
               accumulator = NULL;
               state = IN_TAG_NS_LVAL;
             } else {
@@ -184,6 +185,7 @@ const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
               accumulator->append(1);
             } else if(c == '"') {
               (*namespaceStack.top())[*lastAccumulator] = accumulator;
+              delete lastAccumulator;
               lastAccumulator = NULL;
               accumulator = NULL;
               state = IN_START_TAG;
@@ -195,6 +197,7 @@ const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
           case IN_END_TAG_NS_NAME:
             requestNewAccumulator(data + i);
             if(c == ':' && accumulator->size() != 0 && nodeStack.top()->nmspaceId() == *accumulator) {
+              delete accumulator;
               accumulator = NULL;
               state = IN_END_TAG_NAME;
             } else if(isspace(c) || c == '>') {
