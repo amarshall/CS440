@@ -50,47 +50,39 @@ bool xml::String::operator<(const String& s) const {
   return strncmp(data, s.data, length) < 0;
 }
 
-#include <assert.h> //FIXME
-
-bool operator==(const std::string&, const xml::String&) {
-  assert(false);
-  return false; //FIXME
+bool operator==(const std::string& s, const xml::String& S) {
+  return (std::string)S == s;
 }
 
 bool operator==(const xml::String& S, const std::string& s) {
   return (std::string)S == s;
 }
 
-bool operator!=(const std::string&, const xml::String&) {
-  assert(false);
-  return false; //FIXME
+bool operator!=(const std::string& s, const xml::String& S) {
+  return (std::string)S != s;
 }
 
-bool operator!=(const xml::String&, const std::string&) {
-  assert(false);
-  return false; //FIXME
+bool operator!=(const xml::String& S, const std::string& s) {
+  return (std::string)S != s;
 }
 
-bool operator==(const char*, const xml::String&) {
-  assert(false);
-  return false; //FIXME
+bool operator==(const char* c, const xml::String& S) {
+  return strncmp(S.data, c, S.length) == 0;
 }
 
 bool operator==(const xml::String& S, const char* c) {
   return strncmp(S.data, c, S.length) == 0;
 }
 
-bool operator!=(const char*, const xml::String&) {
-  assert(false);
-  return false; //FIXME
+bool operator!=(const char* c, const xml::String& S) {
+  return strncmp(S.data, c, S.length) != 0;
 }
 
-bool operator!=(const xml::String&, const char*) {
-  assert(false);
-  return false; //FIXME
+bool operator!=(const xml::String& S, const char* c) {
+  return strncmp(S.data, c, S.length) != 0;
 }
 
 std::ostream& operator<<(std::ostream& out, const xml::String& string) {
-  out << std::string(string.data, string.length); //FIXME
+  out << std::string(string);
   return out;
 }
