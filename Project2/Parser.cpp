@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <stack>
 #include <iostream>
 #include <stdio.h>
@@ -34,7 +33,6 @@ void xml::Parser::saveElement(Element* element) {
     element->tagNamespace = new String(*(*namespaceStack.top())[*element->tagNamespaceId]);
   }
   if(nodeStack.size()) nodeStack.top()->children.push_back(element);
-  if(nodeStack.size()) assert(nodeStack.top()->children.back() != NULL);
   nodeStack.push(element);
   accumulator = NULL;
 }
@@ -42,7 +40,6 @@ void xml::Parser::saveElement(Element* element) {
 void xml::Parser::saveText(Text* text) {
   text->data = accumulator;
   if(nodeStack.size()) nodeStack.top()->children.push_back(text);
-  assert(nodeStack.top()->children.back() != NULL);
   accumulator = NULL;
 }
 
@@ -135,7 +132,6 @@ const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
             break;
 
           case IN_START_TAG:
-            assert(accumulator == NULL); //FIXME
             if(isspace(c)) {
               // Continue
             } else if(validTagChar(c)) {
