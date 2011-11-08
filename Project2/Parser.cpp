@@ -30,7 +30,7 @@ void xml::Parser::saveElement(Element* element) {
     element->tagNamespaceId = new String();
     element->tagNamespace = new String();
   } else {
-    element->tagNamespace = new String(*(*namespaceStack.top())[*element->tagNamespaceId]);
+    element->tagNamespace = new String((*namespaceStack.top())[*element->tagNamespaceId]);
   }
   if(nodeStack.size()) nodeStack.top()->children.push_back(element);
   nodeStack.push(element);
@@ -89,11 +89,11 @@ const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
               state = IN_END_TAG_NS_NAME;
             } else {
               state = IN_START_TAG_NS_NAME;
-              std::map<const String, const String*>* map;
+              std::map<const String, String>* map;
               if(namespaceStack.size() == 0) {
-                map = new std::map<const String, const String*>;
+                map = new std::map<const String, String>;
               } else {
-                map = new std::map<const String, const String*>(*namespaceStack.top());
+                map = new std::map<const String, String>(*namespaceStack.top());
               }
               namespaceStack.push(map);
               continue;
@@ -184,9 +184,10 @@ const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
             if(validURIChar(c)) {
               accumulator->append(1);
             } else if(c == '"') {
-              (*namespaceStack.top())[*lastAccumulator] = accumulator;
+              (*namespaceStack.top())[*lastAccumulator] = *accumulator;
               delete lastAccumulator;
               lastAccumulator = NULL;
+              delete accumulator;
               accumulator = NULL;
               state = IN_START_TAG;
             } else {

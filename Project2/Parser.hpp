@@ -23,7 +23,7 @@ namespace xml {
       Element* root;
       String* accumulator;
       std::stack<Element*> nodeStack;
-      std::stack<std::map<const String, const String*>*> namespaceStack;
+      std::stack<std::map<const String, String>*> namespaceStack;
       enum {
         /*  1 */ START = 1,
         /*  2 */ IN_DOC,
