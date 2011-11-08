@@ -1,0 +1,42 @@
+<cluster>
+list of computer names (for testing with valid input)
+	<computers>computer names (Test white space in tag : 4 combinations)
+		<same_name>saturn (Test same name with different namespaces</same_name	>
+		<same_name>jupiter</same_name	>
+		<same_name>alpha</same_name>
+		<same_name>bravo</same_name>
+	</computers>
+	<othercoms >class machine name (Test rebounded namespace)
+		<machine1>swoop</machine1	>
+		<machine2	>snarl</machine2 >
+		<machine3	>slag</machine3 >
+		<machine4	>grimlock</machine4	>
+		<machine5	>jazz</machine5	>
+		<machine6	>brawn</machine6>
+		<machine7	>prowl</machine7>
+		<machine8	    >bumblebee</machine8     >
+	</othercoms	>
+	<unknown	>unknown_machines (Test no namespace)
+		<name1
+		>Test newline in tag
+		</name1
+		>
+		<name2>Test
+		"\n"
+		       and spaces</name2>
+		<name3	>Test namespace scope (ns1 should be http://saturn.cs.binghamton.edu)</name3	>
+		<name4> Test the capability to increase depth
+			<depth1>a
+				<depth2>b
+					<depth3 >c
+						<depth4>d
+							<depth5>e</depth5>
+						</depth4>
+					</depth3>
+				</depth2>
+			</depth1>
+		</name4>
+		<name5></name5>
+		<name6></name6>
+	</unknown	>
+</cluster>

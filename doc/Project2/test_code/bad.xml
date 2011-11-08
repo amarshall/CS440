@@ -1,0 +1,17 @@
+<badinput	put xm	lns	:	n	s=	"http://www.daihee.org"> 
+for test it with bad input.
+parser can ignore white space casing bad input such as "x	mlns  :  n  s"
+or should print error message														 
+	<ns:computer>testarrosa</computer>
+	<ns:computer>error message</ns:computer>
+	<ns:computer1>error message</computer1>
+	<ns:computer2>error message</bad:computer2>
+	<ns:computer3>error message
+	<ns:computer4>error message<ns:computer4>
+	<computer5 xmlns="http://>error message</computer5>
+	<computer6 xmlns=http://>error message</computer6>
+	<computer7 xmlns"http://">error message</computer7>
+	<computer8	error message	/computer8>
+	<	computer9> error message</computer9>
+	<computer10>error message</ computer10>
+</badinput>

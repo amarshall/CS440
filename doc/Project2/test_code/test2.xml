@@ -1,0 +1,32 @@
+<root>
+  Element with different kinds of white space.
+  <e ></e >
+  <e  ></e  >
+  <e 
+  >New line in tag.</e 
+  >
+  <ns1:e xmlns:ns1="URI1"></ns1:e>
+  <ns1:e  xmlns:ns1="URI1"></ns1:e >
+  <ns1:e  xmlns:ns1="URI1" ></ns1:e>
+  <ns1:e  xmlns:ns1="URI1"  xmlns:ns2="URI2"></ns1:e>
+  <ns1:e  xmlns:ns1="URI1"  xmlns:ns2="URI2" ></ns1:e>
+  <ns1:e  xmlns:ns1="URI1"  xmlns:ns2="URI2"  ></ns1:e>
+  <ns1:e  xmlns:ns1="URI1"  xmlns:ns2="URI2"  ></ns1:e >
+  <ns1:e  xmlns:ns1="URI1"  xmlns:ns2="URI2"  ></ns1:e  >
+
+  Different kinds of namespace bindings.
+
+  <ns1:e xmlns:ns1="URI1"></ns1:e>
+  <ns1:e xmlns:ns1="URI1">
+    <ns1:c1></ns1:c1>
+  </ns1:e>
+  <ns1:e xmlns:ns1="URI1" xmlns:ns2="URI2">
+    <ns1:c1></ns1:c1>
+    <ns2:c1></ns2:c1>
+    <ns1:c1 xmlns:ns1="URI1-1" xmlns:ns2="URI1-2">
+      <ns1:c1></ns1:c1>
+      <ns2:c1></ns2:c1>
+    </ns1:c1>
+    <ns1:c1></ns1:c1>
+  </ns1:e>
+</root>

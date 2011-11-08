@@ -1,0 +1,671 @@
+<html>
+  <head>
+    <title>CS 540: Programming Assignment 1</title>
+    <style type="text/css">
+      var {
+        font-family: times;
+        font-style: italic;
+      }
+      div.api {
+        border: 3pt;
+        border-color: blue;
+        border-style: solid;
+        padding-top: 20pt;
+        padding-bottom: 20pt;
+        padding-right: 20pt;
+        padding-left: 20pt;
+      }
+      .points {
+        font-family: times;
+        font-style: italic;
+        font-weight: normal;
+      }
+      div.contest {
+        border-width: 1pt;
+        border-style: solid;
+        border-color: red;
+        padding: 10pt;
+        margin-top: 15pt;
+        margin-bottom: 15pt;
+      }
+      p.contest {
+        margin: 0pt;
+        padding: 0pt;
+        font-size: large;
+        color: #ff0000;
+      }
+      h2.contest {
+        font-size: 20pt;
+        margin: 0pt;
+        margin-bottom: 5pt;
+        padding: 0pt;
+        color: #ff0000;
+      }
+      h3.contest {
+        font-size: 14pt;
+        margin: 0pt;
+        margin-bottom: 5pt;
+        padding: 0pt;
+        color: #ff0000;
+      }
+    </style>
+  </head>
+  <body>
+
+<!-- Fixes:
+Clarify that namespace of "" is allowed.  Not sure about the spec.
+Clarify (and fix solution) that only whitespace is
+allowed after root node end-tag.  This is same as specification.
+Clarify that interpunct is not actually in the XML.
+It's just a meta-symbol.
+
+Clarify that no need to parse URI internal.
+
+Clarify that duplicate prefix is not allowed.
+-->
+    <h1>CS 540: Programming Assignment 2</h1>
+    <h3>Due November 4th, 11:59 PM.</h3>
+
+    <div class="contest">
+    <h3 class="contest">Programming Contest</h3>
+    <p class="contest">
+      The fastest submission will win a
+      a $30 gift certificate
+      to Best Buy.
+      The contest is open to any student,
+      regardless of whether or not they are in the course.
+    </p></div>
+
+    <p>
+      
+      <i>(This document was last modified on Saturday, October 22, 2011 at 08:47:46 PM.)</i>
+
+    <hr>
+
+    <p>
+      The purpose of this assignment is to learn how to use various features of
+      C++ in practice,
+      such as operator overloading, overloading
+      <code>new</code>/<code>delete</code>,
+      RTTI, and how to use the Visitor pattern.
+      You may use any C++ features,
+      including the Standard containers (STL).
+
+    <p>
+      The assignment is to write a parser for a
+      simplified form of XML,
+      containing only start-tags,
+      end-tags,
+      content,
+      and namespaces.
+      The format is given below,
+      by example.
+
+    <!-- Below XML is in sample1.xml -->
+    <blockquote><pre>
+&lt;elem1 xmlns:ns1="http://www.foo1.org" xmlns:ns2="http://www.foo2.org"&middot;&gt;
+  This is some content.
+  &lt;ns1:elem2 xmlns:ns1="http://www.foo.org"&middot;&gt;Content.&lt;/ns1:elem2&middot;&gt;
+  &lt;ns2:elem3&middot;&gt;&lt;/ns2:elem3&middot;&gt;
+  &lt;e3&middot;&gt;element3&lt;/e3&middot;&gt;
+  Some more content.
+&lt;/elem1&middot;&gt;</pre>
+    </blockquote>
+
+    <p>
+      The syntax <code>xmlns:ns1="http://www.foo.org"</code> binds
+      the namespace prefix <code>ns1</code> to the full URI
+      <code>http://www.foo.org</code>.
+      Using the prefix <code>ns1</code> in front of an element
+      name (with an intervening colon)
+      defines the element in the namespace URI that has
+      been bound to the prefix.
+      The scope of a binding is the element within which it is
+      defined,
+      and any child elements.
+      In the example above, 
+      <code>elem2</code> is in the namespace <code>http://www.foo.org</code>.
+      Note that a prefix may be rebound.
+      Also, a prefix may be used by the element where
+      the binding appears.
+      An element can be in no namespace.
+      The prefix used in the start-tag must be identical
+      to the prefix used in the end-tag.
+      Using a different prefix in the end-tag,
+      even if it is bound to the same URI is not allowed.
+
+    <p>
+      Implementing namespaces will require a lookup
+      table of some kind.
+
+    <p>
+      Element names and namespace prefixes will consist of letters, numbers, and underscores.
+      URIs will consist of any valid character except double-quote.
+
+    <p>
+      White space may be present at a number of different points,
+      as shown above.
+      White space can consist of spaces, tabs, or newlines.
+      Every instance of a space above <i>may</i> be replaced by <i>one</i>
+      or more whitespace characters.
+      Every instance of an interpunct <i>must</i> be replaced by <i>zero</i>
+      or more whitespace characters.
+      In other words,
+      in the sample above,
+      an interpunct has been placed at every point at which
+      there could be one or more optional whitespace characters;
+      and the interpunct itself is not part of the actual XML,
+      it is only a symbol that I am using to indicate places
+      where there may be optional whitespace.
+
+    <p>
+      Note that the content includes any and all whitespace.
+      For example, the content of this element is exactly
+      a newline followed by two spaces.
+
+    <pre>
+&lt;elem&gt;
+  &lt;/elem&gt;</pre>
+
+    <p>
+      There will be no predetermined limits on anything.
+      You will need to detect invalid input,
+      but do not need any informative error message
+      other than to indicate that the input is bad.
+      You should not crash on invalid input.
+
+    <p>
+      My intent is that you do not need to actually
+      refer to the XML specification,
+      but for your reference
+      it can be found <a href="http://www.w3.org/TR/2006/REC-xml11-20060816/">here</a>.
+      Note that it includes many things,
+      such as processing instructions, comments, and entities,
+      that you do not need to handle.
+      You may also find the namespace specification useful.
+      It is
+      <a href="http://www.w3.org/TR/2006/REC-xml-names11-20060816">here</a>.
+
+    <p>
+      Some of you may find
+      <a href="parser_example.tar.gz">this</a>
+      example of a state machine useful.
+      Note that this example also abstracts
+      the input source.
+      You do not need to do this.
+      This example is just to teach you the concepts.
+      You should NOT use it as basis to start
+      this assignment,
+      since it will likely lead you down the wrong path.
+
+    <h3>DOM-Style Parser</h3>
+
+    <p>
+      Any XML parser needs to present its functionality
+      via an API of some kind.
+      One popular style is known as DOM,
+      and outputs a tree-based data structure
+      that represents the XML document as a tree
+      of objects.
+      DOM-style APIs are essentially data structures
+      for tree-like data.
+      They present the XML document as a tree of nodes.
+      They provide a way of representing the document tree,
+      and a way of traversing it.
+      Note that an element may have two kinds of child nodes.
+      The first kind is character content,
+      which would be a string.
+      The second kind is a child element.
+      These kinds may be mixed within the children of a single element.
+
+    <p>
+      DOM-style APIs are normally also used for creating
+      an XML document,
+      but we will use it only to represent a parsed XML document.
+      Thus,
+      from the application's point of view,
+      the output of your parser is read-only.
+      An application may traverse the parser result either
+      directly,
+      or by using the Visitor pattern,
+      as specified below.
+
+    <p>
+      The API you will need to implement is given below.
+      You should put everything in the <code>xml</code> namespace.
+      Note that you will certainly be adding additional
+      things to the classes.
+      The API only shows the public part.
+
+    <p>
+      For reference,
+      you can look at the DOM (Level 1) API given
+      <a href="http://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/">here</a>.
+      Wikipedia also provides a good
+      <a href="http://en.wikipedia.org/wiki/Document_Object_Model">introduction</a>.
+      Note that that you do not need to implement a full DOM API, so this is
+      just if you are interested.
+
+    <br>
+    <br>
+
+    <div class="api">
+
+    <h2><center>API</center></h2>
+
+    <h4>Node</h4>
+
+    <blockquote><pre>
+class Node {
+    public:
+        <var>// Must be present, even if it does nothing.</var>
+        virtual ~Node();
+    public:
+        ... <var>// You could add more to the public interface, if you wanted to.</var>
+    private:
+        ... <var>// Private things for your implementation.  Probably will not need</var>
+            <var>// anything, since this primarily an interface class.</var>
+};</pre>
+    </blockquote>
+
+    The above class is a base class.
+    It is polymorphic,
+    and so will work with RTTI.
+
+    <h4>Element</h4>
+
+    <blockquote><pre>
+class Element : public Node {
+    public:
+        <var>// Returns the name of the element.  This is just</var>
+        <var>// the part after the colon.  If there is no colon, then</var>
+        <var>// it is the whole thing, of course.</var>
+        const String &amp;name() const;
+        <var>// Returns the full namespace URI (not the prefix) of the element.</var>
+        <var>// If the element is not in any namespace, this should simply</var>
+        <var>// return an empty String.  Note that 'namespace' is a reserved</var>
+        <var>// keyword, so we don't fully spell it out.</var>
+        const String &amp;nmspace() const;
+        <var>// Returns the number of children nodes.</var>
+        size_t n_children() const;
+        <var>// Returns the i'th child.</var>
+        const Node *child(size_t i) const;
+        <var>// Accepts a visitor.</var>
+        void accept(Visitor *) const;
+        <var>// Convenience functions that internally will use RTTI.</var>
+        static bool is_Element(const Node *);
+        static const Element *to_Element(const Node *);
+    public:
+        ... <var>// You could add more to the public interface, if you wanted to.</var>
+    private:
+        ... <var>// Private things for your implementation.</var>
+};</pre>
+    </blockquote>
+
+      The above class represents XML elements.
+      It inherits from the <code>Node</code> class.
+      RTTI can be used to distinguish an
+      <code>Element</code> derived class
+      from a <code>Text</code> derived class.
+
+    <h4>Text</h4>
+
+    <blockquote><pre>
+class Text : public Node {
+    public:
+        <var>// Returns the text content as a string.</var>
+        const String &amp;str() const;
+        <var>// Convenience functions that internally will use RTTI.</var>
+        static bool is_Text(const Node *);
+        static const Text *to_Text(const Node *);
+    public:
+        ... <var>// You could add more to the public interface, if you wanted to.</var>
+    private:
+        ... <var>// Private things for your implementation.</var>
+};</pre>
+    </blockquote>
+
+    <p>
+      The above class represents XML text content.
+      It inherits from the <code>Node</code> class.
+      RTTI can be used to distinguish an
+      <code>Element</code> object from a 
+      <code>Text</code> object
+      when just a pointer to a Node is available.
+
+    <h4>Parser</h4>
+        
+    <blockquote><pre>
+class Parser {
+    public:
+        Parser(); <var>// Must be able to create one.</var>
+        const Element *parse(const char *doc, size_t sz);
+};</pre>
+    </blockquote>
+
+    <p>
+      To parse a document,
+      the user will first instantiate a <code>Parser</code> object.
+      She will then call <code>parse()</code>
+      and pass in the document in memory and its size.
+      Your code must not modify the memory,
+      of course.
+      This method returns a pointer to the root
+      <code>Element</code> object.
+
+     <p>
+      For example, if the input XML document is:
+
+    <!-- Original is in sample2.xml -->
+    <blockquote><pre>
+&lt;e1&gt;&lt;e2&gt;Text1&lt;/e2&gt;Text2&lt;e3&gt;&lt;/e3&gt;&lt;/e1&gt;</pre>
+    </blockquote>
+
+    then the resulting DOM tree will have a single root node named
+    <code>e1</code> with three child nodes.
+    The first child node will be an Element node <code>e2</code>.
+    The second child node will be a Text node with <code>Text2</code>
+    as the string.
+    The third child node will be an Element node named <code>e3</code>.
+    The <code>e2</code> Element node will have a single Text node,
+    containing the content <code>Text1</code>, as a child.
+    The <code>e3</code> Element node will have no children.
+
+    <p>
+      Deleting the root <code>Element</code> object will delete
+      all child objects.
+      Calling delete on any other <code>Node</code> object will result
+      in undefined behavior.
+      The application must guarantee that the document will be unchanged
+      and persist as long as any <code>Node</code> objects or
+      <code>String</code> objects
+      associated with the document still exist.
+
+    <h4>String</h4>
+
+    <blockquote><pre>
+class String {
+    public:
+        <var>// Copy constructor.</var>
+        String(const String &amp;);
+        <var>// Conversion to </var><code>std::string</code><var>.</var>
+        operator std::string() const;
+        <var>// Assignment.</var>
+        String &amp;operator=(const String &amp;);
+};
+<var>// Comparison with </var><code>std::string</code><var>.</var>
+bool operator==(const std::string &amp;, const String &amp;);
+bool operator==(const String &amp;, const std::string &amp;);
+bool operator!=(const std::string &amp;, const String &amp;);
+bool operator!=(const String &amp;, const std::string &amp;);
+<var>// Comparison with C string.</var>
+bool operator==(const char *, const String &amp;);
+bool operator==(const String &amp;, const char *);
+bool operator!=(const char *, const String &amp;);
+bool operator!=(const String &amp;, const char *);
+<var>// Output operator</var>
+std::ostream &amp;operator&lt;&lt;(std::ostream &amp;, const String &amp;);
+</pre>
+    </blockquote>
+
+    The above is the string class that you should provide.
+    Note that there is no need for a public constructor,
+    though you would need a private (or undocumented one).
+    Also,
+    note that this string class will allow you to use
+    optimized memory management.
+    <!-- Note that copy construction and assignment are not
+    part of the public interface. -->
+
+    <p>
+      You can assume that any String objects must be destructed
+      before the Parser from where they came is destructed.
+
+    <h4>Visitor</h4>
+
+    <blockquote><pre>
+class Visitor {
+    public:
+        virtual void start_element_visit(const Element &amp;) = 0;
+        virtual void end_element_visit(const Element &amp;) = 0;
+        virtual void visit_text(const Text &amp;) = 0;
+};</pre>
+    </blockquote>
+
+    A application will derive a concrete class from the above
+    abstract base class,
+    and pass an instance of it to the root <code>Element</code>
+    in the <code>accept()</code> member function.
+    Calling <code>accept()</code> on anything other than
+    a root <code>Element</code> results in undefined behavior.
+
+    <p>
+      After accepting a visitor,
+      callbacks must be invoked on the visitor object in
+      document order (depth-first).
+      For example, consider the small application program
+      below.
+      All of this code is written by the application programmer.
+      
+    <blockquote>
+      <pre>
+#include "Parser.hpp"
+#include "Visitor.hpp"
+#include "Element.hpp"
+#include "Text.hpp"
+#include &lt;iostream&gt;
+
+using namespace std;
+
+class MyVisitor : public xml::Visitor {
+    public:
+        virtual void start_element_visit(const xml::Element &amp;);
+        virtual void end_element_visit(const xml::Element &amp;);
+        virtual void visit_text(const xml::Text &amp;);
+};
+
+void
+MyVisitor::start_element_visit(const xml::Element &amp;e) {
+    cout &lt;&lt; "Starting visit of element named \"" &lt;&lt; e.name()
+         &lt;&lt; "\" in namespace \"" &lt;&lt; e.namspace() &lt;&lt; "\"..." &lt;&lt; endl;
+}
+
+void
+MyVisitor::end_element_visit(const xml::Element &amp;e) {
+    cout &lt;&lt; "Ending visit of element named \"" &lt;&lt; e.name()
+         &lt;&lt; "\" in namespace \"" &lt;&lt; e.namspace() &lt;&lt; "\"..." &lt;&lt; endl;
+}
+
+void
+MyVisitor::visit_text(const xml::Text &amp;t) {
+    cout &lt;&lt; "Visiting text content \"" &lt;&lt; t.str() &lt;&lt; "\"..." &lt;&lt; endl;
+}
+
+int
+main() {
+
+    xml::Parser parser;
+
+    const char *doc = ...;
+
+    xml::Element *root = parser.parse(doc, sz);
+    MyVisitor v;
+    root-&gt;accept(&amp;v);
+}
+</pre>
+    </blockquote>
+
+    <p>
+      The above is the example of application code that would use your
+      Visitor pattern implementation to traverse the DOM tree.
+      Note that it is <i>application</i> code,
+      not part of your parser proper.
+
+      Your Visitor implementation should traverse every node starting
+      from the root element
+      and invoke callbacks on the passed in <code>Visitor</code> object.
+      Using the code above,
+      if the input XML document was:
+
+    <!-- sample3.xml -->
+    <blockquote>
+      <pre>
+&lt;r&gt;Text1&lt;ns1:c1 xmlns:ns1="URI1"&gt;&lt;/ns1:c1&gt;&lt;/r&gt;
+</pre>
+    </blockquote>
+
+    then the sample application program above would print:
+
+    <blockquote><pre>
+Starting visit of element named "r" in namespace ""...
+Visiting text content "Text1"...
+Starting visit of element named "c1" in namespace "URI1"...
+Ending visit of element named "c1" in namespace "URI1"...
+Ending visit of element named "r" in namespace ""...</pre>
+    </blockquote>
+
+    </div>
+
+    <h3>Optimized Memory Management</h3>
+
+    <p>
+      The API is designed to allow you to use
+      your own optimized internal memory management.
+      During our test,
+      we will repeatedly parse many documents.
+      After each parse,
+      we will free the DOM tree.
+      This will allow you to cache pre-allocated
+      blocks of memory to be re-used.
+      Note that there is no requirement that the
+      internal representation in your string class
+      actually use a null character to terminate
+      the string.
+
+    <p>
+      You may find it useful to overload the <code>new</code>
+      and <code>delete</code> operator,
+      and use them to maintain class-specific free lists.
+      When an object is freed with <code>delete</code>,
+      it can be put on the free list.
+      When an object is created with <code>new</code>,
+      the free list would first be checked.
+      If there is an unused memory block there, it should be used.
+      If not, then global <code>new</code> should be called for memory.
+      Thus, in this implementation,
+      you should never call an un-overloaded <code>new</code> outside of these special
+      functions.
+      This is just an idea,
+      feel free to be creative.
+
+    <h3>Multicore</h3>
+
+    <p>
+      Parsing XML is not naturally amenable to parallelism,
+      but if you wish, you may use a parallel parser.
+      I can provide you with access to a multicore machine
+      if you wish to do so.
+
+    <h3>Submission and Evaluation</h3>
+
+    <p>
+      Some test code is available in
+      <a href="test_code.tar.gz">here</a>.
+      It includes:
+
+    <blockquote>
+      <p><code>parser_test.cpp</code>:
+        Your parser should compile with this file without change.
+        Your submission should also use this to generate
+        the <code>parser_test</code> executable, as detailed below.
+
+      <p><code>test{1,2}.xml</code>:
+        These test your correctness.
+        We have not intentionally withheld any correctness tests
+        that we plan to do, but we reserve the right to add others.
+
+      <p><code>bad.xml</code>:
+        This contains examples of invalid XML that you
+        should be able to handle.
+        Do not crash on any invalid XML.
+
+      <p><code>gen</code>:
+        A document generator for performance testing is included.
+        We currently plan to test performance with a document
+        generated via something similar to:
+
+        <blockquote><pre>
+./gen testdoc.xml 4 6 0.25 <var>N</var></pre>
+        </blockquote>
+
+        where <var>N</var> will be adjusted so that the document
+        is large, but the entire document will still fit in RAM.
+        However, the exact format of the document may change slightly.
+        For example, we may not use randomized element names
+        for the final performance test for the contest.
+        (So if you are using hashing,
+        you will need to have a good hash function.)
+
+      <p><code>sample_solution.{32,64}</code>:
+        These are sample solution executables,
+        compiled for 32-bit and 64-bit Linux.
+        They will allow you to compare your output with what is
+        expected.
+        Your performance should also be on par with these executables.
+
+      </blockquote>
+
+    <p>
+      Every class should have its own header file and implementation
+      file.  The file names should match the class names exactly.
+      You should provide a <code>Makefile</code> that, when run
+      on the cluster of Linux machines provided for the class,
+      will produce an executable named <code>parser_test</code>
+      using the <code>parser_test.cpp</code> that we provided.
+      Send the code as a tarball to the cs540 internal mailing list.
+      Do not include any XML test documents or any object files or executables
+      or core files.
+
+    <p>
+      Correctness will be evaluated mostly by <code>test{1,2}.xml</code> and
+      <code>bad.xml</code>
+      (though of course <code>bad.xml</code> will be broken
+      out into separate files,
+      so your executable won't terminate on the first error).
+      We will also test to make sure that you don't have any static
+      limits by trying things like very long element names, URIs, lots
+      of namespaces, etc.
+      We may add other correctness checks,
+      though we don't have anything in mind right now.
+      You should not have any memory leaks or other memory errors.
+      You can check this with <code>valgrind</code> before submission.
+
+    <p>
+      We will evaluate your performance by repeatedly parsing
+      documents and freeing them with a single Parser object.
+      This will allow you to optimize your memory management
+      internally.
+      You can get full credit with performance that is similar
+      to the sample solution executable provided.
+      That solution uses a custom String implementation,
+      but does no other custom memory management.
+
+    <p>
+      Performance will be evaluated on a 64-bit Linux machine
+      with sufficient RAM.
+
+    <!--
+    <p>
+      Your code must function correctly
+      no matter what order 
+      <code>Element::child()</code>
+      is called,
+      but when testing for performance,
+      we will always call <code>Element::child()</code>
+      in order,
+      which will allow you to optimize how you maintain the list of children.
+    -->
+
+  </body>
+</html>
+<!-- vim: set sts=2 sw=2 expandtab ai: -->
