@@ -31,7 +31,7 @@ void xml::Parser::saveElement(Element* element) {
     element->tagNamespaceId = new String();
     element->tagNamespace = new String();
   } else {
-    element->tagNamespace = (*namespaceStack.top())[*element->tagNamespaceId];
+    element->tagNamespace = new String(*(*namespaceStack.top())[*element->tagNamespaceId]);
   }
   if(nodeStack.size()) nodeStack.top()->children.push_back(element);
   if(nodeStack.size()) assert(nodeStack.top()->children.back() != NULL);

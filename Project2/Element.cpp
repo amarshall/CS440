@@ -9,7 +9,7 @@ xml::Element::Element() {
 
 xml::Element::~Element() {
   delete tagName;
-  // delete tagNamespace; // TODO: auto_ptr
+  delete tagNamespace;
   delete tagNamespaceId;
   for(std::list<Node*>::iterator it = children.begin(); it != children.end(); ++it) {
     delete *it;
