@@ -1,6 +1,6 @@
 CXX=g++
 CFLAGS=-Wall -Wextra -Werror -Wformat=2 -Wfloat-equal -Wshadow -Wwrite-strings -Winit-self -pedantic-errors -Wno-long-long # Weffc++ -Winline -Wpadded
-BINARY=parser
+BINARY=parser_test
 SRC_FILES=Element.cpp Node.cpp Parser.cpp String.cpp Text.cpp Visitor.cpp parser_test.cpp
 .PHONY: clean
 
