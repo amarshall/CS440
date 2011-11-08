@@ -48,6 +48,7 @@ void xml::Parser::requestNewAccumulator(const char* pos) {
 }
 
 const xml::Element* xml::Parser::parse(const char* data, size_t dataSize) {
+  state = START;
   Node* node = new Element();
   bool whitespace = false;
   String* lastAccumulator; // WARNING: This isn't always the last one, just when needed.
