@@ -1,0 +1,1309 @@
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+    <title>CS 540 Programming Assignment 3: Templates</title>
+    <style type="text/css">
+      body {
+        font-family: Cambria, serif;
+      }
+      var {
+        white-space: nowrap;
+        font-size: 107%;
+        font-family: Cambria, serif;
+        font-style: italic;
+      }
+      code {
+        white-space: nowrap;
+        font-size: 100%;
+        font-family: "Courier New", Courier, Consolas, monospace;
+      }
+      div.api {
+        border: 3pt;
+        border-color: blue;
+        border-style: solid;
+        padding-top: 20pt;
+        padding-bottom: 20pt;
+        padding-right: 20pt;
+        padding-left: 20pt;
+      }
+      .points {
+        font-family: times;
+        font-style: italic;
+        font-weight: normal;
+      }
+      div.contest {
+        border-width: 3pt;
+        border-style: solid;
+        border-color: red;
+        padding: 10pt;
+        margin-top: 15pt;
+        margin-bottom: 15pt;
+      }
+      p.contest {
+        margin: 0pt;
+        padding: 0pt;
+        font-size: large;
+        color: #ff0000;
+      }
+      h2.contest {
+        font-size: 20pt;
+        margin: 0pt;
+        margin-bottom: 5pt;
+        padding: 0pt;
+        color: #ff0000;
+      }
+      h3.contest {
+        font-size: 14pt;
+        margin: 0pt;
+        margin-bottom: 5pt;
+        padding: 0pt;
+        color: #ff0000;
+      }
+      table {
+        margin-top: 14pt;
+        margin-bottom: 14pt;
+      }
+      td.section {
+        font-family: Calibri, sans-serif;
+        font-size: 150%;
+        font-style: bold;
+        color: darkgreen;
+        text-align: center;
+      }
+      td.prototype {
+        padding: 4pt;
+        vertical-align: top;
+        /* text-indent: -2em;
+        padding-left: 2em; */
+        white-space: nowrap; /* If IE supports, use pre for convenience. */
+        font-family: "Courier New", Courier, Consolas, monospace;
+      }
+      td.description {
+        padding: 4pt;
+        vertical-align: top;
+      }
+      span.header_code {
+        font-size: 110%;
+        font-family: "Courier New", Courier, Consolas, monospace;
+      }
+      span.text {
+        font-family: Cambria, serif;
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>CS 540 Programming Assignment 3: Templates</h1>
+    <h3>Due Dec 16th, 11:59 PM.</h3>
+
+    <p>
+      
+      <i>(This document was last modified on Thursday, December  1, 2011 at 04:02:35 PM.)</i>
+
+    <hr>
+
+    <p>
+      All classes should be in the <code>cs540</code> namespace.
+      Your code must work with test classes that are
+      not in the <code>cs540</code> namespace, however.
+      Your code should not have any memory errors or leaks
+      as reported by <code>valgrind</code>.
+      Your code should compile
+      and run on the <code>remote.cs.binghamton.edu</code> cluster.
+      Your code should not have any hard-coded, arbitrary limits
+      or assumptions about maximum number of nodes,
+      maximum sizes, etc.
+
+    <h2>Part 1: <span class="header_code">List</span> Class Template (50 Points)</h2>
+
+    <p>
+      For Part 1,
+      you are to implement a list container class template named <code>List</code>
+      similar to the <code>std::list</code> class from the C++ Standard Library.
+      Your list class template will have one type parameter, <var>T</var>, that will be
+      the type of the contained objects.
+      Note that the objects themselves must be in your list,
+      not pointers to the objects.
+      The only members that you can assume that <var>T</var>
+      has are a copy constructor,
+      a destructor,
+      a less-than operator,
+      and an equality operator.
+      In particular,
+      you may <b>not</b> assume a default constructor or an assignment operator.
+
+    <p>
+      Iterators refer to elements of the list.
+      Any function that results in the removal of an
+      element from a list,
+      such as <code>remove</code>,
+      will invalidate any iterator that points to that element.
+
+    <p>
+      Your <code>List</code> class template must have three public nested classes:
+      <code>Iterator</code>,
+      <code>ConstIterator</code>, and <code>ReverseIterator</code>.
+
+    <p>
+      Your list implementation must be completely
+      contained in 
+      your <code>List.hpp</code> file.
+      I do not believe that you will need a <code>List.cpp</code> file,
+      but you may have one if you wish.
+
+      <!--
+      Test code for your <code>List</code> is
+      <a href="solution/list/test.cpp">here</a>,
+      and your code must work with this without change.
+      We reserve the right to add additional
+      tests to this as we see fit.
+      In particular,
+      we will likely add code to test the ability of
+      your code to support multiple iterators
+      traversing your list at the same time.
+      A sample makefile is
+      <a href="solution/list/Makefile">here</a>.
+      -->
+
+    <p>
+      There are many variations on how to implement linked lists.
+      In my experience,
+      I have found doubly-linked, circular lists with a sentinel
+      node to be convenient in most cases,
+      and usually the cost of the extra pointer to maintain
+      a doubly-linked list is not an issue.
+      <!--
+      Some example code is
+      <a href="solution/list/doubly_linked_circular_list.cpp">here</a>.
+      -->
+
+    <p>
+      Some test code is
+      <a href="solution/list/test.cpp">here</a>.
+
+    <h3>Public Member Functions and Comparison Operators of <span class="h3code">List</span></h3>
+
+    <table frame=border rules=all>
+      <thead>
+        <tr>
+          <th>Prototype
+          <th>Description
+      </thead>
+      <tbody>
+
+        <!-- Constructors and Assignment Operator -->
+        <tr><td class="section" colspan=2>Constructors and Assignment Operator
+
+        <tr>
+          <td class="prototype">List()
+          <td class="description">This constructor creates an empty list.
+
+        <tr>
+          <td class="prototype">List(const List &amp;)
+          <td class="description">Copy constructor.
+
+        <tr>
+          <td class="prototype">List &amp;operator=(const List &amp;)
+          <td class="description">Assignment operator.
+            <a href="http://www.parashift.com/c++-faq-lite/value-vs-ref-semantics.html">Value semantics</a>
+            must be used.
+            You must be able to handle self-assignment.
+
+        <!-- Size -->
+        <tr><td class="section" colspan=2>Size
+
+        <tr>
+          <td class="prototype">size_t size() const
+          <td class="description">Returns the number of elements in the list.
+
+        <!-- Iterators -->
+        <tr><td class="section" colspan=2>Iterators
+
+        <tr>
+          <td class="prototype">Iterator begin()
+          <td class="description">Returns an <code>Iterator</code> pointing to the first element.
+
+        <tr>
+          <td class="prototype">Iterator end()
+          <td class="description">Returns an <code>Iterator</code> pointing one past the last element.
+
+        <tr>
+          <td class="prototype">ConstIterator begin() const
+          <td class="description">Returns a <code>ConstIterator</code> pointing to the first element.
+
+        <tr>
+          <td class="prototype">ConstIterator end() const
+          <td class="description">Returns a <code>ConstIterator</code> pointing one past the last element.
+
+        <tr>
+          <td class="prototype">ReverseIterator rbegin()
+          <td class="description">Returns an <code>ReverseIterator</code> pointing to the beginning of the reversed list.
+
+        <tr>
+          <td class="prototype">ReverseIterator rend()
+          <td class="description">Returns an <code>ReverseIterator</code> pointing to one past the last element of the
+          reversed list.
+
+        <!-- Element Access -->
+        <tr><td class="section" colspan=2>Element Access
+
+        <tr>
+          <td class="prototype"><var>T</var> &amp;front()<br>
+            const <var>T</var> &amp;front() const
+          <td class="description">Returns a reference to the first element in the list.
+          The consequences of this function are undefined if the
+          list is empty.
+
+        <tr>
+          <td class="prototype"><var>T</var> &amp;back()<br>
+            const <var>T</var> &amp;back() const
+          <td class="description">Returns a reference to the last element in the list.
+          The consequences of this function are undefined if the
+          list is empty.
+
+        <!-- Modifiers -->
+        <tr><td class="section" colspan=2>Modifiers
+
+        <tr>
+          <td class="prototype">void push_front(const <var>T</var> &amp;)
+          <td class="description">Inserts a new element at the front of the list.
+            This operation must result in only one <var>T</var>
+            constructor invocation.
+
+        <tr>
+          <td class="prototype">void push_back(const <var>T</var> &amp;)
+          <td class="description">Inserts a new element at the end of the list.
+            This operation must result in only one <var>T</var>
+            constructor invocation.
+
+        <tr>
+          <td class="prototype">void pop_front()
+          <td class="description">Removes the first element.
+          If the list is empty, the behavior is undefined.
+
+        <tr>
+          <td class="prototype">void pop_back()
+          <td class="description">Removes the last element.
+          If the list is empty, the behavior is undefined.
+
+        <tr>
+          <td class="prototype">
+            Iterator insert(Iterator <var>pos</var>, const <var>T</var> &amp;);<br>
+            template &lt;typename <var>IT_T</var>&gt;<br>
+            void insert(Iterator <var>pos</var>,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<var>IT_T</var> <var>range_beg</var>, <var>IT_T</var> <var>range_end</var>)
+          <td class="description">
+            Inserts the given object or range of objects before <var>pos</var>.
+            In the second version,
+            the range of objects inserted includes the object
+            <var>range_beg</var> points to, but not the object
+            that <var>range_end</var> points to.
+            In other words,
+            the range is <em>half-open</em>.
+            The iterator returned in the first version
+            points to the newly inserted element.
+            There must be only one constructor invocation per object
+            inserted.
+            Note that the range may be in a different container type,
+            as long as the iterator is compatible.
+            For examaple,
+            it might be from a std::vector.
+
+        <tr>
+          <td class="prototype">
+            Iterator erase(Iterator <var>pos</var>);<br>
+            Iterator erase(Iterator <var>range_beg</var>, Iterator <var>range_end</var>)
+          <td class="description">
+            Removes the given object or range of objects from the list.
+            In the second version,
+            the range of objects removed includes the object
+            <var>range_beg</var> points to, but not the object
+            that <var>range_end</var> points to.
+            In other words,
+            the range is <em>half-open</em>.
+            These functions return the iterator
+            that points to one after the last element erased.
+
+        <tr>
+          <td class="prototype">void clear()
+          <td class="description">
+            Removes all elements from the list.
+
+        <tr>
+          <td class="prototype">
+            void splice(Iterator <var>dest_pos</var>, List &amp;<var>src</var>, Iterator <var>src_pos</var>)<br>
+            void splice(Iterator <var>dest_pos</var>, List &amp;<var>src</var>,<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Iterator <var>range_beg</var>, Iterator <var>range_end</var>)
+          <td class="description">
+            These functions move elements from <var>src</var> to <em>this</em>
+            <code>List</code> object,
+            inserting them before <var>dest_pos</var>.
+            Elements are removed from the <var>src</var> list.
+            The first version just moves one element.
+            In the second version,
+            the range of objects moved includes the object
+            <var>range_beg</var> points to, but not the object
+            that <var>range_end</var> points to.
+            In other words,
+            the range is <em>half-open</em>.
+            You may assume that <code>&amp;</code><var>src</var><code> != this</code>.
+            There must be no <var>T</var> constructor calls invoked as the result
+            of calling this member function.
+
+        <tr>
+          <td class="prototype">
+            void remove(const <var>T</var> &amp;<var>val</var>);<br>
+          <td class="description">
+            All elements that compare equal to <var>val</var>
+            are removed from the list.
+
+        <tr>
+          <td class="prototype">
+            void unique()
+          <td class="description">
+            This function removes all contiguous,
+            duplicate elements.
+            In other words,
+            any sequence of two or more elements that compare equal
+            will be reduced to a single element.
+
+        <!-- Comparison -->
+        <tr><td class="section" colspan=2>Comparison
+
+        <tr>
+          <td class="prototype">
+            bool operator==(const List &amp;, const List &amp;)<br>
+            bool operator&lt;(const List &amp;, const List &amp;)
+          <td class="description">
+            These operators may be implemented as member functions
+            or free functions.
+            The first operator compares the given lists for equality.
+            Two lists compare equal if they have the same number of elements,
+            and if all elements compare equal.
+            For the second operator,
+            you must use lexicographic sorting.
+            Corresponding elements from each list must be compared
+            one-by-one.
+            A list L1 is less than a list L2 if there is an
+            element in L1 that is less than the corresponding
+            element in the same position in list L2,
+            or if all corresponding elements in both lists
+            are equal and L1 is shorter than L2.
+
+      </tbody>
+    </table>
+
+    <h3>Public Member Functions of <span class="header_code">Iterator</span></h3>
+
+    <table frame=border rules=all>
+      <thead>
+        <tr>
+          <th>Prototype
+          <th>Description
+      </thead>
+      <tbody>
+
+        <tr>
+          <td class="prototype">Iterator(const Iterator &amp;);
+          <td class="description">
+            Your class must have a copy constructor,
+            but you do not need to define this if the implicit
+            one works for your implementation.
+            (Which is what I expect in most cases.)
+
+        <tr>
+          <td class="prototype">Iterator&amp; operator=(const Iterator &amp;);
+          <td class="description">
+            Your class must have an assignment operator,
+            but you do not need to define this if the implicit
+            one works for your implementation.
+            (Which is what I expect in most cases.)
+
+        <tr>
+          <td class="prototype">Iterator &amp;operator++()
+          <td class="description">Increments the iterator one element,
+          and returns a reference to the incremented iterator (preincrement).
+          If the iterator is pointing to the end of the list,
+          the behavior is undefined.
+
+        <tr>
+          <td class="prototype">Iterator operator++(int)
+          <td class="description">Increments the iterator one element,
+          and returns an iterator pointing to the element
+          prior to incrementing the iterator (postincrement).
+          If the iterator is pointing to the end of the list,
+          the behavior is undefined.
+
+        <tr>
+          <td class="prototype">Iterator &amp;operator--()
+          <td class="description">Decrements the iterator one element,
+          and returns a reference to the decremented iterator (predecrement).
+          If the iterator is pointing to the beginning of the list,
+          the behavior is undefined.
+          If the iterator has the special value
+          returned by the <code>end()</code> function,
+          then the iterator must point to the last
+          element after this function.
+
+        <tr>
+          <td class="prototype">Iterator operator--(int)
+          <td class="description">Decrements the iterator one element,
+          and returns an iterator pointing to the element
+          prior to decrementing (postdecrement).
+          If the iterator is pointing to the beginning of the list,
+          the behavior is undefined.
+          If the iterator has the special value
+          returned by the <code>end()</code> function,
+          then the iterator must point to the last
+          element after this function.
+
+        <tr>
+          <td class="prototype"><var>T</var> &amp;operator*() const
+          <td class="description">Returns a reference to the <var>T</var> object
+          contained in this element of the list.
+          If the iterator is pointing to the end of the list,
+          the behavior is undefined.
+
+        <tr>
+          <td class="prototype"><var>T</var> *operator-&gt;() const
+          <td class="description">Special member access operator for the element.
+          If the iterator is pointing to the end of the list,
+          the behavior is undefined.
+
+      </tbody>
+    </table>
+
+    <h3>Public Member Functions of <span class="h3code">ConstIterator</span></h3>
+
+    <p>
+      This class has all the same functions and operators as
+      the <code>Iterator</code> class,
+      except that the dereference operator (<code>*</code>)
+      and the class member access operator (<code>-&gt;</code>),
+      better known as the arrow operator,
+      return const references.
+
+    <p>
+      You should try to move as many of the operations below
+      as possible into a base class that is common to the other iterator
+      types.
+
+    <table frame=border rules=all>
+      <thead>
+        <tr>
+          <th>Prototype
+          <th>Description
+      </thead>
+      <tbody>
+
+        <tr>
+          <td class="prototype">ConstIterator(const ConstIterator &amp;);
+          <td class="description">
+            Your class must have a copy constructor,
+            but you do not need to define this if the implicit
+            one works for your implementation.
+            (Which is what I expect in most cases.)
+
+        <tr>
+          <td class="prototype">ConstIterator(const Iterator &amp;)
+          <td class="description">
+            This is a conversion operator.
+
+        <tr>
+          <td class="prototype">ConstIterator&amp; operator=(const ConstIterator &amp;);
+          <td class="description">
+            Your class must have an assignment operator,
+            but you do not need to define this if the implicit
+            one works for your implementation.
+            (Which is what I expect in most cases.)
+
+        <tr>
+          <td class="prototype">ConstIterator &amp;operator++()
+          <td class="description">Increments the iterator one element,
+          and returns a reference to the incremented iterator (preincrement).
+          If the iterator is pointing to the end of the list,
+          the behavior is undefined.
+
+        <tr>
+          <td class="prototype">ConstIterator operator++(int)
+          <td class="description">Increments the iterator one element,
+          and returns an iterator pointing to the element
+          prior to incrementing the iterator (postincrement).
+          If the iterator is pointing to the end of the list,
+          the behavior is undefined.
+
+        <tr>
+          <td class="prototype">ConstIterator &amp;operator--()
+          <td class="description">Decrements the iterator one element,
+          and returns a reference to the decremented iterator (predecrement).
+          If the iterator is pointing to the beginning of the list,
+          the behavior is undefined.
+          if the iterator has the special value
+          returned by the <code>end()</code> function,
+          then the iterator must point to the last
+          element after this function.
+
+        <tr>
+          <td class="prototype">ConstIterator operator--(int)
+          <td class="description">Decrements the iterator one element,
+          and returns an iterator pointing to the element
+          prior to decrementing (postdecrement).
+          If the iterator is pointing to the beginning of the list,
+          the behavior is undefined.
+          if the iterator has the special value
+          returned by the <code>end()</code> function,
+          then the iterator must point to the last
+          element after this function.
+
+        <tr>
+          <td class="prototype">const <var>T</var> &amp;operator*() const
+          <td class="description">Returns a reference to the <var>T</var> object
+          contained in this element of the list.
+          If the iterator is pointing to the end of the list,
+          the behavior is undefined.
+
+        <tr>
+          <td class="prototype">const <var>T</var> *operator-&gt;() const
+          <td class="description">Special member access operator for the element.
+          If the iterator is pointing to the end of the list,
+          the behavior is undefined.
+
+      </tbody>
+    </table>
+
+    <h3>Public Member Functions of <span class="h3code">ReverseIterator</span></h3>
+
+    <p>
+      This class has all the same functions and operators as
+      the <code>Iterator</code> class,
+      except that the direction of increment and decrement
+      are reversed.
+      In other words,
+      incrementing this iterator actually
+      goes backwards through the list.
+
+    <p>
+      You should try to move as many of the operations below
+      as possible into a base class that is common to the other iterator
+      types.
+
+    <p>
+      Note that a real container would probably also
+      have a const reverse iterator,
+      which would result in even more duplication.
+
+    <table frame=border rules=all>
+      <thead>
+        <tr>
+          <th>Prototype
+          <th>Description
+      </thead>
+      <tbody>
+
+        <tr>
+          <td class="prototype">ReverseIterator(const ReverseIterator &amp;);
+          <td class="description">
+            Your class must have a copy constructor,
+            but you do not need to define this if the implicit
+            one works for your implementation.
+            (Which is what I expect in most cases.)
+
+        <tr>
+          <td class="prototype">ReverseIterator&amp; operator=(const ReverseIterator &amp;);
+          <td class="description">
+            Your class must have an assignment operator,
+            but you do not need to define this if the implicit
+            one works for your implementation.
+            (Which is what I expect in most cases.)
+
+        <tr>
+          <td class="prototype">ReverseIterator &amp;operator++()
+          <td class="description">Increments the iterator one element,
+          and returns a reference to the incremented iterator (preincrement).
+          If the iterator is pointing to the end of the reversed list,
+          the behavior is undefined.
+
+        <tr>
+          <td class="prototype">ReverseIterator operator++(int)
+          <td class="description">Increments the iterator one element,
+          and returns an iterator pointing to the element
+          prior to incrementing the iterator (postincrement).
+          If the iterator is pointing to the end of the reversed list,
+          the behavior is undefined.
+
+        <tr>
+          <td class="prototype">ReverseIterator &amp;operator--()
+          <td class="description">Decrements the iterator one element,
+          and returns a reference to the decremented iterator (predecrement).
+          If the iterator is pointing to the beginning of the reversed list,
+          the behavior is undefined.
+          if the iterator has the special value
+          returned by the <code>rend()</code> function,
+          then the iterator must point to the last
+          element of the reversed list after this function.
+
+        <tr>
+          <td class="prototype">ReverseIterator operator--(int)
+          <td class="description">Decrements the iterator one element,
+          and returns an iterator pointing to the element
+          prior to decrementing (postdecrement).
+          If the iterator is pointing to the beginning of the list,
+          the behavior is undefined.
+          if the iterator has the special value
+          returned by the <code>rend()</code> function,
+          then the iterator must point to the last
+          element of the reversed list after this function.
+
+        <tr>
+          <td class="prototype"><var>T</var> &amp;operator*() const
+          <td class="description">Returns a reference to the <var>T</var> object
+          contained in this element of the list.
+          If the iterator is pointing to the end of the list,
+          the behavior is undefined.
+
+        <tr>
+          <td class="prototype"><var>T</var> *operator-&gt;() const
+          <td class="description">Special member access operator for the element.
+          If the iterator is pointing to the end of the list,
+          the behavior is undefined.
+
+      </tbody>
+    </table>
+
+    <h3>Comparison Operators for Iterators</h3>
+
+    <p>
+      These operators are common for all iterator types.
+      They may be implemented as member functions or free
+      functions.
+
+    <table frame=border rules=all>
+      <thead>
+        <tr>
+          <th>Member
+          <th>Description
+      </thead>
+      <tbody>
+
+        <tr>
+          <td class="prototype">
+            bool operator==(const <var>T1</var> &amp;, const <var>T2</var> &amp;)<br>
+            bool operator!=(const <var>T1</var> &amp;, const <var>T2</var> &amp;)<br>
+          <td class="description">
+            <var>T1</var> and <var>T2</var> are any class <code>List</code>
+            iterator type.
+            In other words,
+            any <code>List</code> iterator may be compared against any other.
+            Two iterators compare equal if they point to the same element
+            in the list.
+            Note that that two iterators may compare unequal even if they
+            <var>T</var> objects that they contain compare equal.
+            The exact signature of this operator may depend
+            on your base types,
+            so I have not specified it.
+
+      </tbody>
+    </table>
+
+    <h2>Part 2: Smart Pointer (50 Points)</h2>
+
+    Implement a non-intrusive,
+    thread-safe, reference-counting smart pointer
+    named <code>cs540::Sptr</code>.
+    Here is example usage.
+    API details are below.
+
+<blockquote><pre>
+class A {
+  public:
+    A(const char *);
+    void foo(int i);
+    ...
+  private:
+    ...
+};
+class B : public A {
+  public:
+    B() : A("B"), buf(new char[10]) {}
+    ~B() { delete [] buf; }
+    ...
+  private:
+    ...
+};
+
+Sptr&lt;A&gt; ap1(new A("a string");
+Sptr&lt;A&gt; ap2; // Initialized to point to null pointer.
+
+ap1-&gt;foo(1234); // Arrow operator.
+
+Sptr&lt;B&gt; bp1(new B);
+Sptr&lt;B&gt; bp2(bp1); // Copy constructor.
+Sptr&lt;A&gt; ap2(bp2); // Automatic conversion to base class pointer.
+
+bp1 = bp2; // Self-assignment must be safe.
+ap1 = bp2; // Self-assignment must be safe.
+
+(*bp1).foo(456); // Can be dereferenced.
+bp1.reset(); // Set to null pointer.
+
+if (bp1 == bp2) { ... } // Can be compared.
+if (bp1 == ap1) { ... } // Implicit conversion must happen.
+
+// Static casting, returns a smart pointer.
+Sptr&lt;B&gt; bp3(static_pointer_cast&lt;B&gt;(ap1));
+
+{
+  Sptr&lt;A&gt; ap;
+  {
+    Sptr&lt;B&gt; bp(new B); // Line L1
+    ap = bp;
+  }
+  // At this point, the destructor for ap will cause the object created at Line
+  // L1 to be deleted.  However, note that B is not polymorphic.  Thus, to
+  // ensure that B::~B() is called and buf freed, the object must be deleted
+  // via a pointer to B.
+}
+
+// const-ness should be preserved.
+Sptr&lt;const B&gt; c_bp(new B);
+c_bp-&gt;non_const_funct(); // Should be a syntax error.
+
+// Test for null using safe-bool idiom.
+if (sp) { ... } // True if non-null.
+</blockquote>
+
+    <p>
+      By non-intrusive, we mean that this must work without
+      requiring the pointed-to class to be modified.
+
+    <p>
+      Note that when the smart pointer detects that no
+      more references exist to a particular object,
+      it must delete the object via a pointer to the
+      original type,
+      even if the template argument of the final
+      smart pointer is of a base type.
+      This is to avoid object slicing for non-virtual
+      destructors.
+
+    <p>
+      Thread-safety here means that smart pointers
+      in different threads may be safely assigned
+      and unassigned to shared objects.
+      You do not (and should not) ensure that
+      the same smart pointer can be used concurrently.
+      You may use either locks or atomic increment
+      operations to ensure thread-safety.
+
+    <p>
+      Your implementation must be wholly contained in files named
+      <code>Sptr.hpp</code> and <code>Sptr.cpp</code>.
+      Note that <code>Sptr.cpp</code> will likely be empty.
+
+    <p>
+      Some test code that might be helpful is
+      <a href="solution/sptr/test.cpp">here</a>.
+
+    <!--
+    <p>
+      You must also submit a test program.
+      Your test program must show that your smart pointers are
+      working correctly, by showing that
+      objects are deleted when they should be.
+      You can do this by keeping track of the number
+      of objects in the constructor and destructor of the contained objects,
+      or optionally by overloading new and delete in the contained
+      class (which is probably a little bit harder, but not much).
+    -->
+
+    <h3>Templates</h3>
+
+    <table frame=border rules=all>
+      <thead>
+        <tr>
+          <th>Declaration
+          <th>Description
+      </thead>
+      <tbody>
+
+        <tr>
+          <td class="prototype">template &lt;typename <var>T</var>&gt; class Sptr;</td>
+          <td class="description">
+            The smart pointer points to an object of type <var>T</var>.
+            <var>T</var> may refer to a <code>const</code>-qualified type.
+
+      </tbody>
+    </table>
+
+    <!--
+    <h3>Constant and Type Members for <span class="header_code">Sptr</span></h3>
+
+    <table frame=border rules=all>
+      <thead>
+        <tr>
+          <th>Member
+          <th>Description
+      </thead>
+      <tbody>
+
+        <tr>
+          <td class="prototype">value_type</td>
+          <td class="description">The type of the elements: <var>T</var>.
+
+      </tbody>
+    </table>
+    -->
+
+    <h3>Public Member Functions</h3>
+
+    <table frame=border rules=all>
+      <thead>
+        <tr>
+          <th>Prototype
+          <th>Description
+      </thead>
+      <tbody>
+
+        <tr>
+          <td class="prototype">Sptr();</td>
+          <td class="description">
+            Constructs a smart pointer that points to the null pointer.
+
+        <tr>
+          <td class="prototype">template &lt;typename <var>U</var>&gt;<br>
+            Sptr(<var>U</var> *);</td>
+          <td class="description">
+            Constructs a smart pointer that points to the given
+            object.
+            The reference count is initialized to one.
+
+        <tr>
+          <td class="prototype">Sptr(const Sptr &amp;);<br>
+            template &lt;typename <var>U</var>&gt; Sptr(const Sptr&lt;<var>U</var>&gt; &amp;);</td>
+          <td class="description">
+            The reference count is incremented.
+            If <code><var>U</var> *</code> is not implicitly convertible
+            to <code><var>T</var> *</code>,
+            this will result in a syntax error.
+            Note that both the normal copy constructur
+            and a member template copy constructor must be
+            provided for proper operation.
+
+        <tr>
+          <td class="prototype">Sptr &amp;operator=(const Sptr &amp;);<br>
+            template &lt;typename <var>U</var>&gt; Sptr&lt;<var>T</var>&gt; &amp;operator=(const Sptr&lt;<var>U</var>&gt; &amp;);</td>
+          <td class="description">
+            The reference count is incremented.
+            If <code><var>U</var> *</code> is not implicitly convertible
+            to <code><var>T</var> *</code>,
+            this will result in a syntax error.
+            Note that both the normal assignment operator
+            and a member template assignment operator must be
+            provided for proper operation.
+
+        <tr>
+          <td class="prototype">void reset();</td>
+          <td class="description">
+            The smart pointer is set to point to the null pointer.
+            The reference count for the currently pointed
+            to object, if any, is decremented.
+
+        <tr>
+          <td class="prototype">T &amp;operator*() const;</td>
+          <td class="description">
+            A reference to the pointed-to object is returned.
+            Note that this will be a <code>const</code>-reference if <var>T</var> is
+            a <code>const</code>-qualified type.
+
+        <tr>
+          <td class="prototype">T *operator-&gt;() const;</td>
+          <td class="description">
+            The pointer is returned.
+            Note that this will be a pointer-to-<code>const</code> if <var>T</var> is
+            a <code>const</code>-qualified type.
+
+        <tr>
+          <td class="prototype">T *get() const;</td>
+          <td class="description">
+            The pointer is returned.
+            Note that this will be a pointer-to-<code>const</code> if <var>T</var> is
+            a <code>const</code>-qualified type.
+
+        <tr>
+          <td class="prototype">operator <var>unspecified_bool_type</var>() const;</td>
+          <td class="description">
+            This is to implement the ability to test the pointer
+            for null in a bool context.
+            Use Google to find articles on the safe-bool
+            idiom to understand how to use this.
+
+      </tbody>
+    </table>
+
+    <h3>Free Functions</h3>
+
+    <table frame=border rules=all>
+      <thead>
+        <tr>
+          <th>Prototype
+          <th>Description
+      </thead>
+      <tbody>
+
+        <tr>
+          <td class="prototype">template &lt;typename <var>T1</var>, typename <var>T2</var>&gt;<br>
+            bool operator==(const Sptr&lt;<var>T1</var>&gt; &amp;, const Sptr&lt;<var>T2</var>&gt; &amp;);
+          <td class="description">
+            Returns true if the two smart pointers point to the same
+            object or if they are both null.
+            Note that implicit conversions may need to be applied.
+
+        <tr>
+          <td class="prototype">template &lt;typename <var>T</var>, typename <var>U</var>&gt;<br>
+            Sptr&lt;<var>T</var>&gt; static_pointer_cast(const Sptr&lt;<var>U</var>&gt; &amp;<var>sp</var>);
+          <td class="description">
+            Convert <var>sp</var>
+            by using <code>static_cast</code> to cast
+            the contained pointer.
+            It will result in a syntax error if
+            <code>static_cast</code> cannot
+            be applied to the relevant types.
+
+        <tr>
+          <td class="prototype">template &lt;typename <var>T</var>, typename <var>U</var>&gt;<br>
+            Sptr&lt;<var>T</var>&gt; dynamic_pointer_cast(const Sptr&lt;<var>U</var>&gt; &amp;<var>sp</var>);
+          <td class="description">
+            Convert <var>sp</var>
+            by using <code>dynamic_cast</code> to cast
+            the contained pointer.
+            It will result in a syntax error if
+            <code>dynamic_cast</code> cannot
+            be applied to the relevant types,
+            and will result in a smart pointer to null if the
+            dynamic type of the pointer in <var>sp</var> is not <var>T *</var>.
+
+      </tbody>
+    </table>
+
+<!-- =============================================================================== -->
+
+    <h2>Part 3: Arbitrary Dimension Array Class Template (50 Points)</h2>
+
+    <p>
+      This part is optional.
+      It's worth 1/2 of an assignment.
+      If you do it, your final score will be computed including it.
+      If you do not do it,
+      your final score will not include it.
+
+    <p>
+      For this part,
+      you will implement 
+      a array class template named <code>cs540::Array</code> that can be instantiated with any number of dimensions.
+      The <em>number</em> of dimensions is given as a template argument at compile-time,
+      but the <em>size</em> of each dimension is given in the constructor at run-time.
+
+    <p>
+      Here is an example of how it might be used.
+      The full API is further below.
+
+    <blockquote><pre>
+// Define a 2X3X4 array of integers.  Elements are uninitialized.
+size_t dims[3] = {2, 3, 4};
+Array&lt;3, int&gt; a(dims);
+
+// Range-checked indexing.
+a[0][0][0] = 1234;
+a[1][1][1] = a[0][0][0];
+a[0][2][3] = 5678; // Set the element in the first plane, 3rd row, and 4th column.
+a[0][3][0] = 1; // Out of range, throws.
+
+a = a; // Self-assignment must be a no-op.
+
+const Array&lt;3, int&gt; &amp;const_ref(a);
+
+int i = const_ref[0][0][0]; // Okay.
+
+const_ref[0][0][0] = 1; // Syntax error.
+<!--
+// Iterate through in plane major order.
+for (Array&lt;3, int&gt;::FirstDimensionMajorIterator it = a.fmbegin(); it != a.fmend(); ++it) {
+    cout &lt;&lt; *it &lt;&lt; endl;
+}
+
+// Iterate through in column major order.
+for (Array&lt;3, int&gt;::LastDimensionMajorIterator it = a.lmbegin(); it != a.lmend(); ++it) {
+    cout &lt;&lt; *it &lt;&lt; endl;
+}--></pre>
+    </blockquote>
+
+    <p>
+      You should throw an object of class type <code>cs540::OutOfRange</code> as an
+      exception if there is indexing operation that is out of range.
+      You should provide the definition of this class in your header file.
+
+    <p>
+      Your code must not have any fixed limits.
+      You must be able to construct arrays with any number of elements,
+      etc.
+
+    <p>
+      Your array implementation must be completely
+      contained in 
+      <code>Array.hpp</code> and <code>Array.cpp</code>.
+      Note that <code>Array.cpp</code> will likely be empty.
+      <!--
+      Skeletal test code for your array is
+      <a href="support/part2/test.cpp">here</a>,
+      and your code must work with this without change.
+      We reserve the right to add addtional
+      tests to this as we see fit,
+      but we will conform to the API used in the
+      provided test code.
+      A sample makefile is
+      <a href="support/part1/Makefile">here</a>.
+      -->
+
+    <h3>Template</h3>
+
+    <table frame=border rules=all>
+      <thead>
+        <tr>
+          <th>Declaration
+          <th>Description
+      </thead>
+      <tbody>
+
+        <tr>
+          <td class="prototype">template &lt;int <var>D</var>, typename <var>T</var>&gt; class Array;</td>
+          <td class="description">
+            This declares a
+            <var>D</var>-dimension array containing elements of type <var>T</var>.
+            If <var>D</var> is not positive,
+            the behavior is undefined.
+
+      </tbody>
+    </table>
+
+    <h3>Type Member</h3>
+
+    <table frame=border rules=all>
+      <thead>
+        <tr>
+          <th>Member
+          <th>Description
+      </thead>
+      <tbody>
+
+        <tr>
+          <td class="prototype">ValueType</td>
+          <td class="description">The type of the elements: <var>T</var>.
+
+        <!--
+        <tr>
+          <td class="prototype">FirstDimensionMajorIterator</td>
+          <td class="description">The type of the named iterator.
+
+        <tr>
+          <td class="prototype">LastDimensionMajorIterator</td>
+          <td class="description">The type of the named iterator.
+
+        <tr>
+          <td class="prototype">ConstFirstDimensionMajorIterator</td>
+          <td class="description">The type of the named iterator.
+
+        <tr>
+          <td class="prototype">ConstLastDimensionMajorIterator</td>
+          <td class="description">The type of the named iterator.
+        -->
+
+      </tbody>
+    </table>
+
+    <h3>Public Member Functions</h3>
+
+    <table frame=border rules=all>
+      <thead>
+        <tr>
+          <th>Prototype
+          <th>Description
+      </thead>
+      <tbody>
+
+        <tr>
+          <td class="prototype">Array(size_t (&amp;)[<var>D</var>]);</td>
+          <td class="description">This constructor creates an array of the given size for each dimension.
+            The elements are not initialized.
+
+        <tr>
+          <td class="prototype">Array(const Array &amp;);</td>
+          <td class="description">The copy constructor must work.
+            The dimensionality of the source array must be the same.
+            Note that a non-template copy constructor must be
+            provided, in addtion to the member template copy constructor.
+
+        <tr>
+          <td class="prototype">template &lt;typename <var>U</var>&gt;
+Array(const Array&lt;<var>D</var>, <var>U</var>&gt; &amp;);</td>
+          <td class="description">The copy constructor must work.
+            The dimensionality of the source array must be the same.
+
+        <tr>
+          <td class="prototype">Array &amp;operator=(const Array &amp;);</td>
+          <td class="description">The assignment operator must work.
+            The dimensionality of the source array must be the same.
+            Self-assignment must be a no-op.
+            Note that this non-template assignment operator must be
+            provided, in addtion to the member template assignment operator.
+
+        <tr>
+          <td class="prototype">template &lt;typename <var>U</var>&gt;
+Array &amp;operator=(const Array&lt;<var>U</var>&gt; &amp;);</td>
+          <td class="description">The assignment operator must work.
+            The dimensionality of the source array must be the same.
+            Self-assignment must be a no-op.
+
+        <tr>
+          <td class="prototype"><var>T</var> &amp;operator[size_t <var>i_1</var>][size_t <var>i_2</var>]...[size_t <var>i_D</var>];
+const <var>T</var> &amp;operator[size_t <var>i_1</var>][size_t <var>i_2</var>]...[size_t <var>i_D</var>] const;</td>
+          <td class="description">
+            This is used to index into the array with range-checking.
+            If any given indices are out-of-range,
+            then an <code>OutOfRange</code> exception must be thrown.
+            Note that this is a &ldquo;conceptual&rdquo; operator only.
+            Such an operator does not really exist.
+            Instead,
+            you must figure out how to provide this functionality.
+            (Hint: Use helper classes.)
+
+
+<!-- =============================================================================== -->
+
+    <!--
+    <h2>Submission</h2>
+
+    <p>
+      You must e-mail a compressed (gzip) tar file named
+      <b>CS540-PROJ3-B12345678.tar.gz</b> to
+      the class	<a href="mailto:cs540-internal@cs.binghamton.edu">internal mailing list</a>
+      with the subject set to &lsquo;CS540 PROJ3 SUBMISSION&rsquo;.
+      This tar file must <b>not</b> contain any
+      <code>.o</code> files, executables, or core files.
+      Execute <code>make clean</code> before creating your
+      tar file.
+
+    <p>
+      Your tar file must include four subdirectories,
+      named
+      &thinsp;<code>part1</code>,&thinsp;
+      <code>part2</code>,&thinsp;
+      <code>part3</code>,&thinsp;
+      and &thinsp;<code>part4</code>,&thinsp;
+      containing the four parts, respectively.
+      Each subdirectory must contain your source,
+      a makefile named <code>Makefile</code>,
+      and a <code>README</code>
+      file which minimally contains
+      at least your name and BU number,
+      and optionally any
+      comments you feel are relevant to that part like what works,
+      what does not work,
+      what you feel is interesting,
+      logs of test cases, etc.
+      Your README file will be crucial for
+      assigning partial credit.
+
+    <p>
+      For each part,
+      include test code.
+      If your submission fails our checks,
+      then we will use your test code.
+      If it is not tested in your test code,
+      we will assume that you do not support
+      that functionality.
+      Your makefile for each part must
+      build your test code.
+
+    <p>
+      For Part 4,
+      you must also submit some test program that
+      demonstrates that your CachingNew
+      improves performance.
+
+    <p>
+      Test programs and makefiles may be freely shared and copied.
+      In fact, I encourage it.
+
+    <p>
+      Your code must run on the Linux &rdquo;remote&ldquo; machines,
+      accessible via remote.cs.binghamton.edu.
+
+    <p>
+      Your grade will be based on correctness and performance.
+      Correctness will include whether or not your output is correct,
+      and whether or not you can scale, or have any memory
+      (or other resource) leaks.
+      As always,
+      check your program with valgrind.
+      Correctness will also depend on whether or not you
+      have followed instructions,
+      such as the submission procedure, etc.
+      Performance will only be a factor for this assignment
+      if you are unusually slow.
+    -->
+
+    <!--
+    <h3>Part 1</h3>
+
+    <p>
+      Part 1 must be placed in a subdirectory
+      of your tar file named <code>part1</code>.
+      It must include <code>List.hpp</code>,
+      <code>List.cpp</code> (if you have one),
+      the <code>README</code> file,
+      your test code,
+      and a makefile named <code>Makefile</code>
+      that will build your test code.
+
+    <h3>Part 2</h3>
+
+    <p>
+      Part 2 must be placed in a subdirectory
+      of your tar file named <code>part2</code>.
+      It must include <code>Array3.hpp</code>,
+      <code>Array3.cpp</code> (if you have one),
+      the <code>README</code> file,
+      your test code,
+      and a makefile named <code>Makefile</code>
+      that will build your test code.
+
+    <h3>Part 3</h3>
+
+    <p>
+      Part 3 must be placed in a subdirectory
+      of your tar file named <code>part3</code>.
+      It must include <code>Sptr.hpp</code>,
+      <code>Sptr.cpp</code> (if you have one),
+      the <code>README</code> file,
+      your test code,
+      and a makefile named <code>Makefile</code>
+      that will build your test code.
+
+    <h3>Part 4</h3>
+
+    <p>
+      Part 4 must be placed in a subdirectory
+      of your tar file named <code>part4</code>.
+      It must include <code>StaticArray.hpp</code>,
+      <code>StaticArray.cpp</code> (if you have one),
+      the <code>README</code> file,
+      your test code,
+      and a makefile named <code>Makefile</code>
+      that will build your test code.
+    ~~>
+    -->
+
+  </body>
+</html>
+
+<!-- vim: set tw=0 sts=2 sw=2 expandtab ai: -->
