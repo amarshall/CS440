@@ -15,7 +15,7 @@ using namespace std;
     ((expr) ? 0 : fprintf(stderr, "Check failed at line %d in file %s.\n", __LINE__, __FILE__))
 
 
-    
+
 #define check_list(expr) \
     ((check_list_helper expr) ? 0 : fprintf(stderr, "Check list failed at line %d in file %s.\n", __LINE__, __FILE__))
 
