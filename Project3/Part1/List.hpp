@@ -4,72 +4,84 @@ namespace cs540 {
   template <typename T>
   class List {
     private:
-      class Node {
+      class Link {
         public:
-          Node();
-          Node(const T&);
-          T object;
-          Node* prev;
-          Node* next;
+          Link() {}
+          Link* prev;
+          Link* next;
       };
-      Node sentinel;
+
+      class Node : public Link {
+        public:
+          Node(const T& o) : object(o) {}
+          T object;
+      };
+
+      Link sentinel;
       size_t _size;
 
     public:
       class Iterator {
         friend class List;
         public:
-          Iterator(List&);
-          virtual Iterator& operator++() { node = node->next; return *this; }
-          virtual Iterator operator++(int) { node = node->next; return *this; }
-          virtual Iterator& operator--() { node = node->prev; return *this; }
-          virtual Iterator operator--(int) { node = node->prev; return *this; }
-          T& operator*() const { return node->object; };
-          T* operator->() const { return &(node->object); };
-          virtual bool operator==(const Iterator&);
-          virtual bool operator!=(const Iterator&);
+          virtual Iterator& operator++() { link = link->next; return *this; }
+          virtual Iterator operator++(int) { link = link->next; return *this; }
+          virtual Iterator& operator--() { link = link->prev; return *this; }
+          virtual Iterator operator--(int) { link = link->prev; return *this; }
+          T& operator*() const { return static_cast<Node*>(link)->object; };
+          T* operator->() const { return &(static_cast<Node*>(link)->object); };
+          virtual bool operator==(const Iterator& it) { return link == it.link; }
+          virtual bool operator!=(const Iterator& it) { return !(link == it.link); }
 
         protected:
-          Node* node;
+          Link* link;
 
         private:
-          Iterator(Node* n) : node(n) {};
-          Iterator(const Node* n) : node(n) {};
+          Iterator(Link* n) : link(n) {};
+          Iterator(const Link* n) : link(n) {};
       };
 
       class ConstIterator : public Iterator {
         friend class List;
         public:
-          ConstIterator(const Iterator& o) : Iterator(o.node) {}
-          const T& operator*() const { return this->node->object; };
-          const T* operator->() const { return &(this->node->object); };
+          ConstIterator(const Iterator& o) : Iterator(o.link) {}
+          const T& operator*() const { return static_cast<Node*>(this->link)->object; };
+          const T* operator->() const { return &(static_cast<Node*>(this->link)->object); };
 
         private:
-          ConstIterator(Node* n) : Iterator(n) {}
-          ConstIterator(const Node* n) : Iterator(n) {}
+          ConstIterator(Link* n) : Iterator(n) {}
+          ConstIterator(const Link* n) : Iterator(n) {}
       };
 
       class ReverseIterator : public Iterator {
         friend class List;
         public:
-          ReverseIterator(const ReverseIterator& o) : Iterator(o.node) {}
-          T& operator*() const { return this->node->object; };
-          T* operator->() const { return &(this->node->object); };
+          T& operator*() const { return static_cast<Node*>(this->link)->object; };
+          T* operator->() const { return &(static_cast<Node*>(this->link)->object); };
 
         private:
-          ReverseIterator(Node* n) : Iterator(n) {}
+          ReverseIterator(Link* n) : Iterator(n) {}
       };
 
       List() : _size(0) {}
       List(const List&);
-      List& operator=(const List&);
+      List& operator=(const List& list) {
+        if(this != &list) {
+          clear();
+          for(ConstIterator it = list.begin(); it != list.end(); ++it) {
+            push_back(*it);
+          }
+        }
+        return *this;
+      }
+
       size_t size() const { return _size; }
 
       Iterator begin() { return Iterator(sentinel.next); }
       Iterator end() { return Iterator(&sentinel); }
 
       ConstIterator begin() const { return ConstIterator(sentinel.next); }
-      ConstIterator end() const { return ConstIterator(const_cast<Node*>(&sentinel)); }
+      ConstIterator end() const { return ConstIterator(const_cast<Link*>(&sentinel)); }
 
       ReverseIterator rbegin() { return ReverseIterator(sentinel.prev); }
       ReverseIterator rend() { return ReverseIterator(&sentinel); }
@@ -85,25 +97,53 @@ namespace cs540 {
       void pop_front() { erase(begin()); }
       void pop_back() { erase(--end()); }
 
-      Iterator insert(Iterator pos, const T&);
-      template <typename IT_T> void insert(Iterator pos, IT_T rangeBegin, IT_T rangeEnd);
+      Iterator insert(Iterator pos, const T& obj) {
+        Link* n = new Node(obj);
+        Link* before = pos.link->prev;
+        Link* after = pos.link;
+        n->prev = before;
+        n->next = after;
+        before->next = n;
+        after->prev = n;
+        return --pos;
+      }
+      template <typename IT_T> void insert(Iterator pos, IT_T rangeBegin, IT_T rangeEnd) {
+        for(IT_T it = rangeBegin; it != rangeEnd; ++it) {
+          insert(pos, *it);
+        }
+      }
 
       Iterator erase(Iterator pos) { return erase(pos, ++pos); };
       Iterator erase(Iterator rangeBegin, Iterator rangeEnd) {
-        Node* nodeBegin = rangeBegin.node->prev;
-        Node* nodeEnd = rangeEnd.node;
-        nodeBegin->next = nodeEnd;
-        nodeEnd->prev = nodeBegin;
-        return Iterator(nodeBegin);
+        //FIXME: Potential memory leaks here.
+        Link* linkBegin = rangeBegin.link->prev;
+        Link* linkEnd = rangeEnd.link;
+        linkBegin->next = linkEnd;
+        linkEnd->prev = linkBegin;
+        return Iterator(linkEnd);
       };
 
-      void clear();
-      void splice(Iterator destPos, List& src, Iterator srcPos);
-      void splice(Iterator destPos, List& src, Iterator rangeBegin, Iterator rangeEnd);
+      void clear() { erase(begin(), end()); }
+      void splice(Iterator destPos, List& src, Iterator srcPos) { splice(destPos, src, srcPos, ++srcPos); }
+      void splice(Iterator destPos, List& src, Iterator rangeBegin, Iterator rangeEnd) {
+        insert(destPos, rangeBegin, rangeEnd);
+        src.erase(rangeBegin, rangeEnd);
+      };
       void remove(const T&) {};
       void unique();
-      bool operator==(const List&);
-      bool operator!=(const List&);
+      bool operator==(const List& list) {
+        if(size() == list.size()) {
+          ConstIterator one = begin();
+          ConstIterator two = list.begin();
+          for(; one != end() && two != list.end(); ++one, ++two) {
+            if(*one != *two) return false;
+          }
+          return true;
+        } else {
+          return false;
+        }
+      }
+      bool operator!=(const List& list) { return !(*this == list); }
       bool operator<(const List&);
   };
 }
