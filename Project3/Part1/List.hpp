@@ -145,7 +145,7 @@ namespace cs540 {
         return Iterator(after);
       };
 
-      void splice(Iterator destPos, List& src, Iterator srcPos) { splice(destPos, src, srcPos, ++srcPos); }
+      void splice(Iterator destPos, List& src, Iterator srcPos) { splice(destPos, src, srcPos, ++Iterator(srcPos)); }
       void splice(Iterator destPos, List& src, Iterator rangeBegin, Iterator rangeEnd) {
         insert(destPos, rangeBegin, rangeEnd);
         src.erase(rangeBegin, rangeEnd);
