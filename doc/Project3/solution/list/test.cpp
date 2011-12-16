@@ -72,6 +72,9 @@ class MyClass {
         friend inline bool operator==(const MyClass &o1, const MyClass &o2) {
             return o1.val == o2.val;
         }
+        friend inline bool operator!=(const MyClass &o1, const MyClass &o2) {
+            return o1.val != o2.val;
+        }
         friend inline bool operator<(const MyClass &o1, const MyClass &o2) {
             return o1.val < o2.val;
         }
