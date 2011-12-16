@@ -108,6 +108,9 @@ namespace cs540 {
       void pop_front() { erase(begin()); }
       void pop_back() { erase(--end()); }
 
+      template <typename IT_T> void insert(Iterator pos, IT_T rangeBegin, IT_T rangeEnd) {
+        for(IT_T it = rangeBegin; it != rangeEnd; ++it) insert(pos, *it);
+      }
       Iterator insert(Iterator pos, const T& obj) {
         Link* n = new Node(obj);
         Link* before = pos.link->prev;
@@ -116,24 +119,26 @@ namespace cs540 {
         n->next = after;
         before->next = n;
         after->prev = n;
+        ++_size;
         return --pos;
       }
 
-      template <typename IT_T> void insert(Iterator pos, IT_T rangeBegin, IT_T rangeEnd) {
-        for(IT_T it = rangeBegin; it != rangeEnd; ++it) {
-          insert(pos, *it);
-        }
-      }
-
       void clear() { erase(begin(), end()); }
-      Iterator erase(Iterator pos) { return erase(pos, ++pos); };
       Iterator erase(Iterator rangeBegin, Iterator rangeEnd) {
-        //FIXME: Potential memory leaks here.
-        Link* linkBegin = rangeBegin.link->prev;
-        Link* linkEnd = rangeEnd.link;
-        linkBegin->next = linkEnd;
-        linkEnd->prev = linkBegin;
-        return Iterator(linkEnd);
+        for(Iterator it = rangeBegin; it != rangeEnd;) it = erase(it);
+        return rangeEnd;
+      };
+      Iterator erase(Iterator pos) {
+        Link* l = pos.link;
+        Link* before = l->prev;
+        Link* after = l->next;
+
+        before->next = after;
+        after->prev = before;
+        delete l;
+        --_size;
+
+        return Iterator(after);
       };
 
       void splice(Iterator destPos, List& src, Iterator srcPos) { splice(destPos, src, srcPos, ++srcPos); }
