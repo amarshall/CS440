@@ -31,7 +31,7 @@ namespace cs540 {
           T& operator*() const { return static_cast<Node*>(link)->object; };
           T* operator->() const { return &(static_cast<Node*>(link)->object); };
           virtual bool operator==(const Iterator& it) { return link == it.link; }
-          virtual bool operator!=(const Iterator& it) { return !(link == it.link); }
+          virtual bool operator!=(const Iterator& it) { return link != it.link; }
 
         protected:
           Link* link;
