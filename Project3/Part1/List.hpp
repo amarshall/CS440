@@ -68,7 +68,7 @@ namespace cs540 {
         sentinel.next = &sentinel;
       }
 
-      List(const List& list) {
+      List(const List& list) : _size(0) {
         sentinel.prev = &sentinel;
         sentinel.next = &sentinel;
         for(ConstIterator it = list.begin(); it != list.end(); ++it) {
