@@ -56,6 +56,10 @@ namespace cs540 {
       class ReverseIterator : public Iterator {
         friend class List;
         public:
+          virtual Iterator& operator++() { this->link = this->link->prev; return *this; }
+          virtual Iterator operator++(int) { Iterator it = Iterator(*this); ++(*this); return it; }
+          virtual Iterator& operator--() { this->link = this->link->next; return *this; }
+          virtual Iterator operator--(int) { Iterator it = Iterator(*this); --(*this); return it; }
           T& operator*() const { return static_cast<Node*>(this->link)->object; };
           T* operator->() const { return &(static_cast<Node*>(this->link)->object); };
 
@@ -155,7 +159,7 @@ namespace cs540 {
 
       void unique() {
         for(Iterator it = begin(); it != end();) {
-          if(*it == *(it++)) it = erase(it);
+          if(*it == *(++it) && it != end()) it = --erase(it);
         }
       }
 
