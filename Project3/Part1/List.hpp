@@ -63,8 +63,17 @@ namespace cs540 {
           ReverseIterator(Link* n) : Iterator(n) {}
       };
 
-      List() : _size(0) {}
-      List(const List&);
+      List() : _size(0) {
+        sentinel.prev = &sentinel;
+        sentinel.next = &sentinel;
+      }
+
+      List(const List& list) {
+        for(ConstIterator it = list.begin(); it != list.end(); ++it) {
+          push_back(*it);
+        }
+      }
+
       List& operator=(const List& list) {
         if(this != &list) {
           clear();
@@ -107,12 +116,14 @@ namespace cs540 {
         after->prev = n;
         return --pos;
       }
+
       template <typename IT_T> void insert(Iterator pos, IT_T rangeBegin, IT_T rangeEnd) {
         for(IT_T it = rangeBegin; it != rangeEnd; ++it) {
           insert(pos, *it);
         }
       }
 
+      void clear() { erase(begin(), end()); }
       Iterator erase(Iterator pos) { return erase(pos, ++pos); };
       Iterator erase(Iterator rangeBegin, Iterator rangeEnd) {
         //FIXME: Potential memory leaks here.
@@ -123,14 +134,24 @@ namespace cs540 {
         return Iterator(linkEnd);
       };
 
-      void clear() { erase(begin(), end()); }
       void splice(Iterator destPos, List& src, Iterator srcPos) { splice(destPos, src, srcPos, ++srcPos); }
       void splice(Iterator destPos, List& src, Iterator rangeBegin, Iterator rangeEnd) {
         insert(destPos, rangeBegin, rangeEnd);
         src.erase(rangeBegin, rangeEnd);
       };
-      void remove(const T&) {};
-      void unique();
+
+      void remove(const T& obj) {
+        for(Iterator it = begin(); it != end(); ++it) {
+          if(*it == obj) it = --erase(it);
+        }
+      };
+
+      void unique() {
+        for(Iterator it = begin(); it != end();) {
+          if(*it == *(it++)) it = erase(it);
+        }
+      }
+
       bool operator==(const List& list) {
         if(size() == list.size()) {
           ConstIterator one = begin();
@@ -144,6 +165,16 @@ namespace cs540 {
         }
       }
       bool operator!=(const List& list) { return !(*this == list); }
-      bool operator<(const List&);
+      bool operator<(const List& list) {
+        bool lessThan = false;
+        ConstIterator one = begin();
+        ConstIterator two = list.begin();
+        for(; one != end() && two != list.end(); ++one, ++two) {
+          // No MyClass::operator< means logical :(
+          if(*two < *one) return false;
+          if(*one != *two) lessThan = true;
+        }
+        return lessThan || two != list.end();
+      }
   };
 }
