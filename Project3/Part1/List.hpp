@@ -159,7 +159,8 @@ namespace cs540 {
 
       void unique() {
         for(Iterator it = begin(); it != end();) {
-          if(*it == *(++it) && it != end()) it = --erase(it);
+          Iterator cur = Iterator(it);
+          if(*cur == *(++it) && it != end()) it = erase(cur);
         }
       }
 
