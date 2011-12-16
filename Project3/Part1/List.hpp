@@ -182,7 +182,7 @@ namespace cs540 {
         ConstIterator one = begin();
         ConstIterator two = list.begin();
         for(; one != end() && two != list.end(); ++one, ++two) {
-          // No MyClass::operator< means logical :(
+          // No MyClass::operator>, etc. means logical :(
           if(*two < *one) return false;
           if(*one != *two) lessThan = true;
         }
