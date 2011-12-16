@@ -9,7 +9,7 @@ else
     CFLAGS+=-g -O0
 endif
 
-all: part1_test
+all: part1_test part2_test
 
 part1_test: Part1/test.o
 	$(CXX) $(CFLAGS) $^ -o $@
@@ -17,5 +17,11 @@ part1_test: Part1/test.o
 Part1/test.o: Part1/test.cpp Part1/List.hpp
 	$(CXX) $(CFLAGS) -c $< -o $@
 
+part2_test: Part2/test.o
+	$(CXX) $(CFLAGS) $^ -o $@
+
+Part2/test.o: Part2/test.cpp Part2/Sptr.hpp
+	$(CXX) $(CFLAGS) -c $< -o $@
+
 clean:
-	rm -rf *.o *.dSYM *.plist part1_test part2_test part3_test
+	rm -rf *.o *.dSYM *.plist part1_test part2_test
