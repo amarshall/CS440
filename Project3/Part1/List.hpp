@@ -25,9 +25,9 @@ namespace cs540 {
         friend class List;
         public:
           virtual Iterator& operator++() { link = link->next; return *this; }
-          virtual Iterator operator++(int) { link = link->next; return *this; }
+          virtual Iterator operator++(int) { Iterator it = Iterator(*this); ++(*this); return it; }
           virtual Iterator& operator--() { link = link->prev; return *this; }
-          virtual Iterator operator--(int) { link = link->prev; return *this; }
+          virtual Iterator operator--(int) { Iterator it = Iterator(*this); --(*this); return it; }
           T& operator*() const { return static_cast<Node*>(link)->object; };
           T* operator->() const { return &(static_cast<Node*>(link)->object); };
           virtual bool operator==(const Iterator& it) { return link == it.link; }
