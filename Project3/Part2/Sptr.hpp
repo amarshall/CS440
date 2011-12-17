@@ -10,7 +10,7 @@ namespace cs540 {
       pthread_mutex_t lock;
 
     public:
-      Proxy() : refCount(0) { pthread_mutex_init(&lock, 0); }
+      Proxy() : refCount(1) { pthread_mutex_init(&lock, 0); }
       virtual ~Proxy() {}
 
       int decrement() {
