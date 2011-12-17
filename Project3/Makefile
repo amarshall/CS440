@@ -1,5 +1,5 @@
 CXX=g++
-CFLAGS=-Wall -Wextra -Werror -Wformat=2 -Wfloat-equal -Wshadow -Wwrite-strings -Winit-self -pedantic-errors -Wno-long-long # Weffc++ -Winline -Wpadded
+CFLAGS=-Wall -Wextra -Werror -Wformat=2 -Wfloat-equal -Wshadow -Wwrite-strings -Winit-self -Wno-long-long # -pedantic-errors Weffc++ -Winline -Wpadded
 .PHONY: clean
 
 RELEASE ?= 0
@@ -18,7 +18,7 @@ Part1/test.o: Part1/test.cpp Part1/List.hpp
 	$(CXX) $(CFLAGS) -c $< -o $@
 
 part2_test: Part2/test.o
-	$(CXX) $(CFLAGS) $^ -o $@
+	$(CXX) $(CFLAGS) -lpthread $^ -o $@
 
 Part2/test.o: Part2/test.cpp Part2/Sptr.hpp
 	$(CXX) $(CFLAGS) -c $< -o $@
