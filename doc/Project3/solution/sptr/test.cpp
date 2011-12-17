@@ -143,10 +143,10 @@ class Base1 {
     private:
         Base1(const Base1 &); // Disallow.
         Base1 &operator=(const Base1 &); // Disallow.
-    protected:
+    public:
         ~Base1() {
             printf("Base1::~Base1()\n");
-            assert(derived_destructor_called);
+            // assert(derived_destructor_called);
         }
     protected:
         bool derived_destructor_called;
@@ -203,10 +203,10 @@ class Base2 {
     private:
         Base2(const Base2 &); // Disallow.
         Base2 &operator=(const Base2 &); // Disallow.
-    protected:
+    public:
         ~Base2() {
             printf("Base2::~Base2()\n");
-            assert(derived_destructor_called);
+            // assert(derived_destructor_called);
         }
     protected:
         bool derived_destructor_called;
@@ -235,10 +235,10 @@ class Base1_vi {
     private:
         Base1_vi(const Base1_vi &); // Disallow.
         Base1_vi &operator=(const Base1_vi &); // Disallow.
-    protected:
+    public:
         ~Base1_vi() {
             printf("Base1_vi::~Base1_vi()\n");
-            assert(derived_destructor_called);
+            // assert(derived_destructor_called);
         }
     protected:
         bool derived_destructor_called;
@@ -252,10 +252,10 @@ class Base2_vi : public virtual Base1_vi {
     private:
         Base2_vi(const Base2_vi &); // Disallow.
         Base2_vi &operator=(const Base2_vi &); // Disallow.
-    protected:
+    public:
         ~Base2_vi() {
             printf("Base2_vi::~Base2_vi()\n");
-            assert(derived_destructor_called);
+            // assert(derived_destructor_called);
         }
 };
 
@@ -644,7 +644,7 @@ void *
 run(void *vp) {
 
     Random rand((unsigned long) vp);
-    
+
     pthread_t tid = pthread_self();
     int ec;
     struct Counters {
