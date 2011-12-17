@@ -203,7 +203,7 @@ class Base2 {
     private:
         Base2(const Base2 &); // Disallow.
         Base2 &operator=(const Base2 &); // Disallow.
-    public:
+    protected:
         ~Base2() {
             printf("Base2::~Base2()\n");
             assert(derived_destructor_called);
@@ -644,7 +644,7 @@ void *
 run(void *vp) {
 
     Random rand((unsigned long) vp);
-
+    
     pthread_t tid = pthread_self();
     int ec;
     struct Counters {
