@@ -58,7 +58,7 @@ namespace cs540 {
 
       Sptr& operator=(const Sptr& s) {
         if(!(*this == s)) {
-          if(counter->decrement() == 0) delete object;
+          if(object != 0 && counter->decrement() == 0) delete object;
           object = s.object;
           counter = const_cast<SharedCounter*>(s.counter);
         }
@@ -68,7 +68,7 @@ namespace cs540 {
 
       template <typename U>
       Sptr<T>& operator=(const Sptr<U>& s) {
-        if(counter->decrement() == 0) delete object;
+        if(object != 0 && counter->decrement() == 0) delete object;
         object = static_cast<T*>(s.object);
         counter = const_cast<SharedCounter*>(s.counter);
         counter->increment();
@@ -76,7 +76,7 @@ namespace cs540 {
       }
 
       void reset() {
-        if(counter->decrement() == 0) delete object;
+        if(object != 0 && counter->decrement() == 0) delete object;
         object = 0;
       }
 
