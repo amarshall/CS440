@@ -1,10 +1,30 @@
+#include <pthread.h>
+
 namespace cs540 {
   class SharedCounter {
-    public:
-      SharedCounter() : refCount(0) {}
+    private:
       int refCount;
-      int decrement() { if(refCount > 0) { --refCount; } return refCount; }
-      int increment() { return ++refCount; }
+      pthread_mutex_t lock;
+
+    public:
+      SharedCounter() : refCount(0) { pthread_mutex_init(&lock, 0); }
+      int decrement() {
+        int r;
+        pthread_mutex_lock(&lock);
+        if(refCount > 0) {
+          r = --refCount;
+        } else {
+          r = refCount;
+        }
+        pthread_mutex_unlock(&lock);
+        return r;
+      }
+      int increment() {
+        pthread_mutex_lock(&lock);
+        int r = ++refCount;
+        pthread_mutex_unlock(&lock);
+        return r;
+      }
   };
 
   template <typename T>
@@ -26,14 +46,14 @@ namespace cs540 {
       Sptr(U* o) : counter(new SharedCounter()), object(static_cast<T*>(o)) {}
 
       Sptr(const Sptr& s) : counter(s.counter), object(s.object) {
-        counter->refCount++;
+        counter->increment();
       };
 
       template <typename U>
       Sptr(const Sptr<U>& s) {
         object = static_cast<T*>(s.object);
         counter = static_cast<SharedCounter*>(s.counter);
-        counter->refCount++;
+        counter->increment();
       }
 
       Sptr& operator=(const Sptr& s) {
@@ -42,7 +62,7 @@ namespace cs540 {
           object = s.object;
           counter = const_cast<SharedCounter*>(s.counter);
         }
-        counter->refCount++;
+        counter->increment();
         return *this;
       }
 
@@ -51,7 +71,7 @@ namespace cs540 {
         if(counter->decrement() == 0) delete object;
         object = static_cast<T*>(s.object);
         counter = const_cast<SharedCounter*>(s.counter);
-        counter->refCount++;
+        counter->increment();
         return *this;
       }
 
