@@ -99,7 +99,7 @@ namespace cs540 {
       T* get() const { return object; }
 
       operator unspecified_bool_type() const {
-        return object == 0 ? &Sptr<T>::this_type_does_not_support_comparisons : 0;
+        return object != 0 ? &Sptr<T>::this_type_does_not_support_comparisons : 0;
       }
   };
 
