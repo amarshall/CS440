@@ -1,3 +1,6 @@
+#ifndef JAM_LIST_HPP
+#define JAM_LIST_HPP
+
 #include <stdlib.h>
 
 namespace cs540 {
@@ -190,3 +193,5 @@ namespace cs540 {
       }
   };
 }
+
+#endif

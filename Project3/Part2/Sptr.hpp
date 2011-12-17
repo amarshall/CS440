@@ -1,3 +1,6 @@
+#ifndef JAM_SPTR_HPP
+#define JAM_SPTR_HPP
+
 #include <pthread.h>
 
 namespace cs540 {
@@ -118,3 +121,5 @@ namespace cs540 {
     return Sptr<T>(dynamic_cast<T*>(s.object));
   }
 }
+
+#endif
