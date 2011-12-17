@@ -86,8 +86,8 @@ namespace cs540 {
           if(object != 0 && proxy->decrement() == 0) { delete proxy; proxy = 0; object = 0; }
           object = s.object;
           proxy = s.proxy;
+          proxy->increment();
         }
-        proxy->increment();
         return *this;
       }
 
