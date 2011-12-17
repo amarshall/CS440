@@ -75,6 +75,12 @@ namespace cs540 {
         proxy->increment();
       }
 
+      // Ugly "hack" to dynamic_cast instead of static_cast
+      template <typename U>
+      Sptr(const Sptr<U>& s, int) : object(dynamic_cast<T*>(s.object)), proxy(s.proxy) {
+        proxy->increment();
+      }
+
       Sptr& operator=(const Sptr& s) {
         if(!(*this == s)) {
           if(object != 0 && proxy->decrement() == 0) delete proxy;
@@ -117,12 +123,12 @@ namespace cs540 {
 
   template <typename T, typename U>
   Sptr<T> static_pointer_cast(const Sptr<U>& s) {
-    return Sptr<T>(static_cast<T*>(s.object));
+    return Sptr<T>(s);
   }
 
   template <typename T, typename U>
   Sptr<T> dynamic_pointer_cast(const Sptr<U>& s) {
-    return Sptr<T>(dynamic_cast<T*>(s.object));
+    return Sptr<T>(s, 1);
   }
 }
 
