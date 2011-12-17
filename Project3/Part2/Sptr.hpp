@@ -59,6 +59,10 @@ namespace cs540 {
     public:
       Sptr() : object(0), proxy(0) {}
 
+      ~Sptr() {
+        if(object != 0 && proxy->decrement() == 0) delete proxy;
+      }
+
       template <typename U>
       Sptr(U* o) : object(o), proxy(new Proxy_t<U>(o)) {}
 
