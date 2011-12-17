@@ -60,7 +60,7 @@ namespace cs540 {
       Sptr() : object(0), proxy(0) {}
 
       ~Sptr() {
-        if(object != 0 && proxy->decrement() == 0) delete proxy;
+        if(proxy != 0 && proxy->decrement() == 0) delete proxy;
       }
 
       template <typename U>
@@ -83,7 +83,7 @@ namespace cs540 {
 
       Sptr& operator=(const Sptr& s) {
         if(!(*this == s)) {
-          if(object != 0 && proxy->decrement() == 0) { delete proxy; proxy = 0; object = 0; }
+          if(proxy != 0 && proxy->decrement() == 0) { delete proxy; proxy = 0; object = 0; }
           object = s.object;
           proxy = s.proxy;
           proxy->increment();
@@ -93,7 +93,7 @@ namespace cs540 {
 
       template <typename U>
       Sptr<T>& operator=(const Sptr<U>& s) {
-        if(object != 0 && proxy->decrement() == 0) { delete proxy; proxy = 0; object = 0; }
+        if(proxy != 0 && proxy->decrement() == 0) { delete proxy; proxy = 0; object = 0; }
         object = static_cast<T*>(const_cast<U*>(s.object));
         proxy = s.proxy;
         proxy->increment();
@@ -101,7 +101,7 @@ namespace cs540 {
       }
 
       void reset() {
-        if(object != 0 && proxy->decrement() == 0) { delete proxy; proxy = 0; object = 0; }
+        if(proxy != 0 && proxy->decrement() == 0) { delete proxy; proxy = 0; object = 0; }
         object = 0;
         proxy = 0;
       }
