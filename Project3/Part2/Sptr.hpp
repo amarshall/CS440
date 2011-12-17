@@ -71,7 +71,9 @@ namespace cs540 {
   };
 
   template <typename T1, typename T2>
-  bool operator==(const Sptr<T1>&, const Sptr<T2>&);
+  bool operator==(const Sptr<T1>& one, const Sptr<T2>& two) {
+    return one.object == two.object;
+  }
 
   template <typename T, typename U>
   Sptr<T> static_pointer_cast(const Sptr<U>& s) {
